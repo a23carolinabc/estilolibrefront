@@ -1,0 +1,33 @@
+﻿@inherits InputBase<TimeOnly?>
+@using System.Linq.Expressions
+
+<div class=@ClaseDiv>
+    <label style="width:100%;">
+        @Label
+        <Validacion For=@ValidationFor></Validacion>
+    </label>
+    <InputDate style="width:100%;" Type="InputDateType.Time" @bind-Value=@CurrentValue @attributes=@AtributosInput />
+</div>
+
+
+@code {
+    #region ***** PARÁMETROS *****
+    [Parameter]
+    public string? ClaseDiv { get; set; }
+    [Parameter]
+    public string? Label { get; set; }
+    [Parameter]
+    public Dictionary<string, object>? AtributosInput { get; set; }
+    [Parameter, EditorRequired]
+    public Expression<Func<TimeOnly?>> ValidationFor { get; set; } = default!;
+    #endregion
+        
+    #region ***** MÉTODOS *****
+    protected override bool TryParseValueFromString(string? value, out TimeOnly? result, out string validationErrorMessage)
+    {
+        result = TimeOnly.Parse(value);
+        validationErrorMessage = null;
+        return true;
+    }
+    #endregion
+}

@@ -1,0 +1,19 @@
+﻿@if (this._visible)
+{
+    <section class="spinnerContainer @(EspacioParaTexto)">
+        <div class="spinner icon-spinner-2"></div>
+	</section>
+}
+
+@code {
+    [Parameter]
+    public string EspacioParaTexto { get; set; } = "";
+
+    public bool _visible { get; set; } = true;
+
+    public void VisibilidadElementoCarga(bool value)
+    {
+        this._visible = value;
+        InvokeAsync(StateHasChanged);
+    }
+}

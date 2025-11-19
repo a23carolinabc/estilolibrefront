@@ -1,0 +1,9 @@
+﻿<span class="icono @Icono" hidden=@Visibilidad></span>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Icono { get; set; }
+
+    [Parameter]
+    public bool Visibilidad { get; set; } = false;
+}

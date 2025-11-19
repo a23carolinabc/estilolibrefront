@@ -1,0 +1,6 @@
+input {
+    text-align: right;
+    padding-right: 5px;
+    padding-left: 5px;
+    width: -webkit-fill-available;
+}

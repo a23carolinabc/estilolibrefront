@@ -1,0 +1,72 @@
+﻿.contenedor {
+    cursor: pointer;
+    position: relative;
+    left: 0;
+    display: flex;
+    margin-top: 0.5rem;
+}
+
+.formulario {
+    position: absolute;
+    width: max-content;
+    top: 130%;
+    left: 2%;
+    font-size: 0.9rem;
+    background-color: white;
+    border-radius: 3px;
+    text-align: justify;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 25px;
+    z-index: 100;
+}
+
+    .formulario ::deep form {
+        margin: 1.3rem;
+    }
+
+    .formulario::before {
+        content: "";
+        position: absolute;
+        bottom: 100%;
+        left:3%;
+        rotate: 180deg;
+        border-width: 7px;
+        border-style: solid;
+        border-color: white transparent transparent transparent;
+    }
+
+button {
+    cursor: pointer;
+    color: #597997;
+    border: 1px solid #597997;
+    background-color: white;
+    margin: 0rem 1.3rem 1.3rem 0rem;
+    border-radius: 3px;
+    width: max-content;
+    height:2.5rem;
+    padding: .0rem 1rem;
+    border-radius: 20px;
+}
+
+    button.aceptar {
+        border-color: #597997;
+        background-color: #597997;
+        color: white;
+        margin-left: 1.3rem;
+    }
+
+        button:hover, button.aceptar:hover {
+            color: #597997;
+            border-color: #eeeeee;
+            background-color: #eeeeee;
+        }
+
+    button:focus {
+        box-shadow: none;
+    }
+
+    button:active, button.aceptar:active {
+        background-color: #eeeeee;
+        font-weight: 500;
+        font-size: 0.85rem;
+        padding: .1rem 1.1rem;
+    }

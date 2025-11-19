@@ -1,0 +1,100 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+	<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<BlazorWebAssemblyAdditionalCulture Include="gl-ES" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <Compile Remove="Objetos\AvisoDataDB.cs" />
+    <Compile Remove="Objetos\AvisoDTO.cs" />
+    <Compile Remove="Objetos\IncidenciaDataDB.cs" />
+    <Compile Remove="Objetos\IncidenciaDTO.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="ElementosFormulario\Validacion.razor" />
+    <Content Remove="Pages\BusquedaAvisos.razor" />
+    <Content Remove="Pages\RegistroAviso.razor" />
+    <Content Remove="Pages\RegistroIncidencia.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ElementosFormulario\Validacion.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Traducciones\TrGeneral\TrGeneral.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TrGeneral.resx</DependentUpon>
+    </Content>
+    <Content Include="Traducciones\TrGeneral\TrGeneral.es.resx" />
+    <Content Include="Traducciones\TrGeneral\TrGeneral.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\Login.razor" />
+    <None Include="wwwroot\Recursos\icono-formulario.svg" />
+    <None Include="wwwroot\Recursos\icono-listado.svg" />
+    <None Include="wwwroot\Recursos\logo.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+    <PackageReference Include="Blazored.SessionStorage" Version="2.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.3" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="9.0.3" />
+    <PackageReference Include="MudBlazor" Version="8.14.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Traducciones\TrErrores\TrErrores.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TrErrores.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Traducciones\TrGeneral\TrGeneral.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TrGeneral.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Traducciones\TrMenu\TrMenu.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TrMenu.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Traducciones\TrErrores\TrErrores.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TrErrores.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Traducciones\TrGeneral\TrGeneral.es.resx">
+      <LastGenOutput>General.es.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Traducciones\TrGeneral\TrGeneral.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TrGeneral.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Traducciones\TrMenu\TrMenu.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TrMenu.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

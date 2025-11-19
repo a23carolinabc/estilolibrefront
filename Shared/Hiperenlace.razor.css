@@ -1,0 +1,12 @@
+﻿a {
+    color: #9FA614;
+    text-decoration: underline !important;
+    font-size: 0.9rem;
+    cursor: pointer;
+    width: fit-content;
+}
+
+    a:hover {
+        color: #9E9E9E !important;
+        text-decoration: underline !important;
+    }

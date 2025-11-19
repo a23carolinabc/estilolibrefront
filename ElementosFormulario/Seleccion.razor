@@ -1,0 +1,59 @@
+﻿@inherits InputBase<int>
+@using System.Linq.Expressions
+@typeparam T
+
+<div class=@ClaseDiv>
+    <label>
+        @Label
+        <Validacion For=@ValidationFor></Validacion>
+    </label>
+    <InputSelect @bind-Value=@CurrentValue class="form-select" style="width:100%;" @attributes=@AtributosInput>
+        
+        @if (CampoDesconocido == true)
+        {
+            <option selected value="0"></option>
+        } else
+        {
+            <option hidden disabled selected value="0"></option>
+        }        
+        @if (Lista != null)
+        {
+            @foreach (var tipo in Lista)
+            {
+                <option value=@tipo.GetType().GetProperty("Id").GetValue(tipo, null)>
+                    @tipo.GetType().GetProperty("Nombre").GetValue(tipo, null)
+                    @tipo.GetType().GetProperty("Comentario")?.GetValue(tipo, null)
+                </option>
+            }
+        }
+    </InputSelect>
+</div>
+
+@code {
+    #region ***** PARÁMETROS *****
+    [Parameter]
+    public string? ClaseDiv { get; set; }
+    [Parameter]
+    public string? Label { get; set; }
+    [Parameter]
+    public bool? CampoDesconocido { get; set; } = true;
+
+    [Parameter]
+    public Dictionary<string, object>? AtributosInput { get; set; }
+
+    [Parameter, EditorRequired]
+    public Expression<Func<int>> ValidationFor { get; set; } = default!;
+
+    [Parameter, EditorRequired]
+    public List<T>? Lista { get; set; }
+    #endregion
+
+    #region ***** MÉTODOS *****
+    protected override bool TryParseValueFromString(string? value, out int result, out string validationErrorMessage)
+    {
+        result = Convert.ToInt32(value);
+        validationErrorMessage = null;
+        return true;
+    }
+    #endregion
+}

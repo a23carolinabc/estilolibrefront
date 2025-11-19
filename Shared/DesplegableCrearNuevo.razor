@@ -1,0 +1,78 @@
+﻿<section class="contenedor" tabindex="0">
+    <Hiperenlace Texto=@this._strHiperenlace OnClick=DesplegarSubMenu></Hiperenlace>
+    @if (this._desplegarSubMenu)
+    {
+        <section class="formulario" tabindex="0" id=@this._id>
+            @Formulario
+            <button class="aceptar" @onclick=@Aceptar>@this.Traductor!["lblAceptar"]</button>
+            <button class="cancelar" @onclick=@CerrarSubMenu>@this.Traductor!["lblCancelar"]</button>
+        </section>
+    }
+</section>
+
+@code {
+    #region ***** DEPENDENCIAS *****
+
+    [Inject]
+    public IStringLocalizer<TrGeneral> Traductor { get; set; }
+    [Inject]
+    public IJSRuntime JSRuntime { get; set; }
+
+    #endregion
+
+    #region ***** PARÁMETROS *****
+
+    [Parameter, EditorRequired]
+    public RenderFragment? Formulario { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback OnGuardarSeleccionado { get; set; }
+    [Parameter]
+    public string strHiperenlace { get; set; }
+
+    #endregion
+
+    #region ***** VARIABLES INTERNAS *****    
+
+    private bool _desplegarSubMenu = false;
+    private string _strHiperenlace = "";
+    private string _id = $"Desplegable_{Guid.NewGuid().ToString("N")}";
+    #endregion
+
+    #region ***** MÉTODOS PÚBLICOS *****
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (this._desplegarSubMenu){
+            await this.JSRuntime.InvokeVoidAsync("Utils.CerrarAlHacerClickFuera", this._id, DotNetObjectReference.Create(this));
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (!string.IsNullOrEmpty(strHiperenlace))
+        {
+            this._strHiperenlace = strHiperenlace;
+        }
+    }
+
+    [JSInvokable]
+    public void CerrarSubMenu()
+    {
+        this._desplegarSubMenu = false;
+        StateHasChanged();
+    }    
+    #endregion
+
+    #region ***** MÉTODOS PRIVADOS *****
+
+    private async void Aceptar()
+    {       
+        await this.OnGuardarSeleccionado.InvokeAsync();
+    }
+
+    private void DesplegarSubMenu()
+    {
+        this._desplegarSubMenu = !this._desplegarSubMenu;
+    }
+    #endregion
+}

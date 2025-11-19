@@ -1,0 +1,155 @@
+﻿@using Microsoft.AspNetCore.SignalR.Client;
+@using Microsoft.Extensions.Options
+@implements IDisposable;
+
+@if (MainLayout != null)
+{
+    <p class="titulo">@Traductor[MainLayout.TituloCabecera!]</p>
+}
+<section tabindex="0" @onfocusout=CerrarSubMenu>
+    <div class="menuUsuario">
+
+        <div class="menuUsuario" @onclick=DesplegarSubMenu>
+            <img class="icono icono-usuario" alt="icono-usuario" src="Recursos/icono-usuario.svg" />
+            <p>@this._strNombreUsuario</p>
+            <img class="icono icono-flechaDesplegables" src="Recursos/icono-flechaDesplegables.svg" />
+        </div>
+    </div>
+
+    @if (this._desplegarSubMenu)
+    {
+        <div class="subMenu" @ref=@this._subMenu>
+            <a class="nav-link idioma @(this._desplegarIdiomas? "seleccionado" : "")"
+               @onclick=@(()=>this._desplegarIdiomas=!this._desplegarIdiomas)>
+                @Traductor["liIdiomaCabecera"]
+            </a>
+            @if (this._desplegarIdiomas)
+            {
+                <div class="idiomas">
+                    <a class="nav-link" @onclick='() => CambiarIdioma("gl-ES")'>
+                        Galego
+                    </a>
+                    <a class="nav-link" @onclick='() => CambiarIdioma("es-ES")'>
+                        Español
+                    </a>
+                </div>
+            }
+            <a class="nav-link" @onclick=LogOut>
+                @Traductor["liSesionCabecera"]
+            </a>
+        </div>
+    }
+</section>
+
+@code {
+    #region ***** DEPENDENCIAS *****
+
+    [Inject]
+    public required ILocalStorageService LocalStorage { get; set; }
+    [Inject]
+    public required ServicioNavegacion Navegacion { get; set; }
+    [Inject]
+    public required IStringLocalizer<TrGeneral> Traductor { get; set; }
+    [Inject]
+    public required IStringLocalizer<TrErrores> TraductorErrores { get; set; }
+    [Inject]
+    public required ServicioLogIn ServicioLogIn { get; set; }
+    [Inject]
+    public required ServicioDatosContexto ServicioDatosContexto { get; set; }
+    [Inject]
+    public required IOptions<Configuracion> Configuracion { get; set; }
+
+    #endregion
+
+    #region ***** PARÁMETROS *****
+
+    [CascadingParameter]
+    public MainLayout? MainLayout { get; set; }
+    [Parameter]
+    public PopUpConfirmacion PopUpConfirmacion { get; set; }
+
+    #endregion
+
+    #region ***** VARIABLES INTERNAS *****
+
+    private HubConnection _conexionHub { get; set; }
+
+    private bool _avisoHayFallosEnMaquinas = false;
+    private bool _desplegarSubMenu = false;
+    private bool _desplegarIdiomas = false;
+
+    private string _strNombreUsuario = "";
+    private ElementReference _subMenu;
+
+    #endregion
+
+
+    #region ***** MÉTODOS PÚBLICOS *****
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (this._desplegarSubMenu)
+        {
+            await this._subMenu.FocusAsync();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        this._strNombreUsuario = this.ServicioDatosContexto.GetNombreApellidosUsuario();
+
+        // try
+        // {
+        //     //Conectar con el servidor.
+        //     this._conexionHub = new HubConnectionBuilder().WithUrl(this.Configuracion.Value.BackendUrlSignalR + "/conexion").Build();
+        //     this._conexionHub.On<string>("ConexionEstablecida", mensaje =>
+        //         {
+        //             Console.WriteLine(mensaje);
+        //             InvokeAsync(StateHasChanged);
+        //         });
+        //     await this._conexionHub.StartAsync();
+
+        // }
+        // catch (Exception ex)
+        // {
+        //     this.PopUpConfirmacion.TextoPopUp(this.TraductorErrores[ex.Message], this.TraductorErrores["Error"], false);
+        // }
+        // finally
+        // {
+        //     StateHasChanged();
+        // }
+    }
+
+    #endregion
+
+
+    #region ***** MÉTODOS PRIVADOS *****
+
+    private async Task CambiarIdioma(string strCodigoIdiomaSeleccionado)
+    {
+        await this.ServicioDatosContexto.ActualizarIdiomaAsync(strCodigoIdiomaSeleccionado);
+        Navegacion.NavegarA(Navegacion.GetUriActual(), true);
+    }
+
+    private void DesplegarSubMenu()
+    {
+        this._desplegarSubMenu = !this._desplegarSubMenu;
+    }
+
+    private void CerrarSubMenu()
+    {
+        this._desplegarSubMenu = false;
+    }
+
+    private void LogOut()
+    {
+        ServicioLogIn.LogOut();
+    }
+
+    void IDisposable.Dispose()
+    {
+        this._conexionHub.DisposeAsync();
+    }
+    #endregion
+}
+

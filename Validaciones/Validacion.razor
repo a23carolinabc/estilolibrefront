@@ -1,0 +1,44 @@
+﻿@using System.Linq.Expressions
+
+@typeparam TValue
+@implements IDisposable
+
+@foreach (var mensaje in EditContext.GetValidationMessages(identificadorCampo))
+{
+    if (mensaje != null)
+    {
+        <ToolTip Mensaje=@mensaje ClaseBootstrap="MensajeError" CursorAyuda=true EspacioIzquierda=true>
+            <PuntoAnclajeToolTip>
+                <p>*</p>
+            </PuntoAnclajeToolTip>
+        </ToolTip>
+    }
+}
+
+@code {
+    #region ***** PARÁMETROS *****
+    [CascadingParameter] 
+    private EditContext EditContext { get; set; }
+    [Parameter, EditorRequired] 
+    public Expression<Func<TValue>> For { get; set; }
+    #endregion
+
+    #region ***** VARIABLES INTERNAS *****
+    private FieldIdentifier identificadorCampo;
+    #endregion
+
+    #region ***** MÉTODOS *****
+    protected override void OnInitialized()
+    {
+        identificadorCampo = FieldIdentifier.Create(For);
+        EditContext.OnValidationStateChanged += HandleValidationStateChanged;
+    }
+
+    private void HandleValidationStateChanged(object o, ValidationStateChangedEventArgs args) => StateHasChanged();
+
+    public void Dispose()
+    {
+        EditContext.OnValidationStateChanged -= HandleValidationStateChanged;
+    }
+    #endregion
+}

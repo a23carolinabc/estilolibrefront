@@ -1,0 +1,36 @@
+.autocompletado{
+    margin:0;
+}
+::deep input {
+    margin: 0;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    color: black;
+}
+    ::deep input:hover{
+        border: 1px solid #5C8F94;
+    }
+    ::deep input:focus{
+        border: 1px solid #5C8F94;
+        box-shadow: #5C8F94 0px 2px 8px 0px;
+    }
+
+::deep select {
+    max-width: 0;
+    padding: 0 20px 0px 20px;
+    background-position: center;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border: 1px solid lightgrey !important;
+}
+    ::deep select:hover {
+        border: 1px solid #5C8F94 !important;
+    }
+    ::deep select:focus {
+        border: 1px solid #5C8F94 !important;
+    }
+    ::deep select:disabled {
+        border: 1px solid #eeeeee !important;
+        background-color: #eeeeee;
+        color: dimgrey;
+    }

@@ -1,0 +1,32 @@
+﻿<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <AuthorizeRouteView RouteData="@routeData">
+            <Authorizing>
+                <FocusOnNavigate RouteData="@routeData" Selector="h1" />                
+            </Authorizing>
+            <NotAuthorized>
+                @{
+                    this.Navegacion.NavegarA(URLsPantallas.Login);
+                }
+            </NotAuthorized>          
+        </AuthorizeRouteView>       
+    </Found>
+    <NotFound>
+        <CascadingAuthenticationState>
+            <PageTitle>No encontrada</PageTitle>
+            <LayoutView>
+                <Error errMnsj="ERR_404"></Error>
+            </LayoutView>
+        </CascadingAuthenticationState>
+    </NotFound>
+</Router>
+
+@code {
+
+    #region ***** DEPENDENCIAS *****
+
+    [Inject]
+    public required ServicioNavegacion Navegacion { get; set; }
+
+    #endregion
+}

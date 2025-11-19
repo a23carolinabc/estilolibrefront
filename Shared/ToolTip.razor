@@ -1,0 +1,25 @@
+﻿<section class="containerMensaje @ClaseBootstrap @(CursorAyuda? "cursorAyuda":"") @(EspacioIzquierda? "espacioIzquierda":"")">
+    <span class="@(AparecerAbajo? "abajo" : "")">@this.Mensaje</span>
+    @this.PuntoAnclajeToolTip
+</section>
+
+@code {
+
+    [Parameter, EditorRequired]
+    public required RenderFragment? PuntoAnclajeToolTip { get; set; }
+
+    [Parameter]
+    public string? Mensaje { get; set; }
+
+    [Parameter]
+    public string? ClaseBootstrap { get; set; }
+
+    [Parameter]
+    public bool AparecerAbajo { get; set; } = false;
+
+    [Parameter]
+    public bool CursorAyuda { get; set; } = false;
+
+    [Parameter]
+    public bool EspacioIzquierda { get; set; } = false;
+}

@@ -1,0 +1,84 @@
+.vistaCompleta {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    background-color: #EEEEEE;
+    overflow: hidden;
+    height: 100vh;
+}
+
+main {
+    flex: 1;
+    height: 750px;
+}
+
+::deep .pantalla {
+    background-color: white;
+    height: 87vh;
+    align-self: center;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: .5rem 1rem;
+    padding: 1.5rem 1.5rem 1.5rem 1.5rem;
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+}
+
+main ::deep input[type=date]::-webkit-calendar-picker-indicator,
+main ::deep input[type=time]::-webkit-calendar-picker-indicator {
+    outline-color: rgb(89, 121, 151);
+}
+
+main ::deep input, main ::deep select, main ::deep textarea {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid lightgrey;
+    border-radius: 10px;
+    height: 2.2rem;
+    font-size: 0.9rem;
+}
+
+main ::deep input[type=number] {
+    text-align: end;
+}
+
+main ::deep input:hover, main ::deep select:hover, main ::deep textarea:hover {
+    border: 1px solid #597997;
+}
+
+    main ::deep input:focus, main ::deep select:focus, main ::deep textarea:focus {
+        border: 1px solid #597997;
+        box-shadow: none;
+    }
+
+main ::deep input:disabled, main ::deep select:disabled, main ::deep textarea:disabled {
+    border: 1px solid #eeeeee;
+    background-color: #eeeeee;
+    color: dimgrey;
+}
+
+main ::deep .titulo {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: .5rem;
+    color: #597997;
+}
+
+main ::deep .subtitulo {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #597997;
+}
+main ::deep .subtitulo2 {
+    margin-bottom: 0.5rem;
+    color: rgb(89, 121, 151,0.7);
+    font-weight: 600;
+}
+
+main ::deep label {
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    font-size: 0.95rem;
+    margin: 0;
+}

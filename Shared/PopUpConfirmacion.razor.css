@@ -1,0 +1,52 @@
+﻿.popUp {
+    min-width: 35%;
+    width: fit-content;
+    padding: 1rem;
+    border: 1px solid #eeeeee;
+    border-radius: 20px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+    .popUp .popUpTitulo {
+        font-weight: 600;
+        font-size: 1rem;
+        padding: 5px;
+    }
+
+    .popUp .popUpTexto {
+        font-size: 0.9rem;
+        padding: 5px;
+    }
+
+.popUpBotones button {
+    font-size: .9rem;
+    min-width: 5rem;
+    height:2.5rem;
+    padding: .0rem 1rem;
+    border-radius: 20px;
+    margin: 0;
+    border: none;
+    opacity: .6;
+}
+
+.popUpBotones .aceptar {
+    color: white;
+    background-color: #B90909;
+    float: right;
+    margin-right: 2rem;
+}
+
+.popUpBotones .cancelar {
+    margin-left: 2rem;
+    background-color: lightgrey !important;
+}
+
+    .popUpBotones .cancelar:hover, .popUpBotones .aceptar:hover {
+        opacity: 1;
+    }
+
+    .popUpBotones .cancelar:active, .popUpBotones .aceptar:active {
+        opacity: 0.7;
+        font-size: 0.85rem;
+        padding: .0rem 1.1rem;
+    }

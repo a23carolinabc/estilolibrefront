@@ -1,0 +1,83 @@
+﻿/*#region Animaciones*/
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+/*#endregion */
+
+
+/*#region ELEMENTOS*/
+.elemento {
+    padding-right: .5rem;
+    padding-left: .5rem;
+    font-size: .8rem;
+    position: relative;
+}
+
+    .elemento ::deep a, .elemento ::deep .principal {
+        text-decoration: none;
+        cursor: pointer;
+        color: #597997;
+        border-radius: 20px;
+        height: 2.5rem;
+        display: flex;
+        align-items: center;
+        line-height: 1rem;
+        flex-direction: column;
+        justify-content: center;
+        padding-right: 1rem;
+        padding-left: 1rem;
+    }
+    .elemento ::deep .principal {
+        height: 5rem;
+        padding: 0;
+        text-align: center;
+        font-weight: 600;
+        cursor: default;
+    }
+
+    .elemento ::deep a:hover, .elemento ::deep .principal:hover {
+        background-color: rgb(89, 121, 151,0.5);
+        color: white;
+    }
+    .elemento ::deep a.active {
+        background-color: rgb(89, 121, 151,0.7);
+        color: white;
+    }
+    .elemento ::deep a:hover .icono, .elemento ::deep .principal:hover .icono{
+        filter: invert(100%);
+    }
+/*#endregion */
+
+/*#region SUBMENUS*/
+    .elemento .subMenu.lateral {
+        -webkit-animation: fadeIn 0.7s;
+        animation: fadeIn 0.7s;
+        font-size: .85rem;
+        position: absolute;
+        background-color: white;
+        box-shadow: inset 2px 0px 2px 0px rgba(14, 30, 37, 0.32), 5px 0px 13px rgba(14, 30, 37, 0.12);
+        border-bottom-right-radius: 20px;
+        border-top-right-radius: 20px;
+        z-index: 5;
+        left: 82px;
+        top: 0;
+        width: max-content;
+        padding: .8rem;
+    }
+/*#endregion */

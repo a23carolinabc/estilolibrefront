@@ -1,0 +1,35 @@
+﻿.popUp {
+    position: absolute;
+    top: .4rem;
+    left: 33%;
+    height: 4rem;
+    width: 40rem;
+    padding: .5rem 1rem;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+    .popUp.visible {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .popUp.noVisible {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .popUp .texto {
+        color: white;
+        font-size: 1rem;
+        text-align: center;
+    }
+
+        .popUp .texto p {
+            margin: 0;
+        }

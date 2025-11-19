@@ -1,0 +1,107 @@
+﻿@attribute [AllowAnonymous]
+@page "/login"
+
+
+<div class="pantalla">
+    <Cabecera />
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-10 col-md-6 col-lg-4">
+                    <div class="card shadow-sm p-4">
+                        <EditForm Model="@_usuario" OnSubmit="LogIn">
+
+                            <!-- Logo o título -->
+                            <div class="text-center mb-3">
+                                <span class="logo"></span>
+                                <label class="h5 mb-0">Bienvenid@("@")</label>
+                            </div>
+
+                            <!-- Usuario -->
+                            <div class="mb-3">
+                                <InputText type="text"
+                                           @bind-Value="@_usuario.Login"
+                                           class="form-control"
+                                           placeholder="@Traductor["strUsuario"]"
+                                           autocomplete="off" />
+                            </div>
+
+                            <!-- Contraseña -->
+                            <div class="mb-3">
+                                <InputText type="password"
+                                           @bind-Value="@_usuario.Contraseña"
+                                           class="form-control"
+                                           placeholder="@Traductor["strContraseña"]" />
+                            </div>
+
+                            @if (this._bIntentoFallido)
+                            {
+                                <!-- Error -->
+                                <div class="mb-3">
+                                    <span class="text-danger small @this._bIntentoFallido">
+                                        @TraductorErrores["ERR_CrendencialesInvalidas"]
+                                    </span>
+                                </div>
+                            }
+                        
+
+                            <!-- Enlaces -->
+                            <div class="mb-3 text-end">
+                                <Hiperenlace Clase="d-block small recuperar" Texto="¿Olvidaste la contraseña?" />
+                                <Hiperenlace Clase="d-block small" Texto="¿Todavía no estás registrado? ¡Regístrate!" />
+                            </div>
+
+                            <!-- Botón -->
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary" disabled="@this._bLoginBloqueado">
+                                    Iniciar sesión
+                                </button>
+                            </div>
+                        </EditForm>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+
+@code {
+    #region ***** DEPENDECIAS *****
+
+    [Inject]
+    public required ServicioLogIn ServicioLogin { get; set; }
+
+    [Inject]
+    public required IStringLocalizer<TrGeneral> Traductor { get; set; }
+
+    [Inject]
+    public required IStringLocalizer<TrErrores> TraductorErrores { get; set; }
+
+    #endregion
+
+    #region ***** VARIABLES INTERNAS *****
+
+    private UsuarioLogin _usuario = new UsuarioLogin();
+    private bool _bLoginBloqueado = false;
+    private bool _bIntentoFallido = false;
+
+    #endregion
+
+    #region ***** MÉTODOS PÚBLICOS *****
+
+    public async void LogIn()
+    {
+        bool bLogueado;
+
+        this._bLoginBloqueado = true;
+        StateHasChanged();
+
+        bLogueado = await this.ServicioLogin.LogIn(this._usuario.Login, this._usuario.Contraseña);
+        if (!bLogueado) 
+        { 
+            this._bLoginBloqueado = false;
+            this._bIntentoFallido = true;
+            StateHasChanged(); 
+        }
+    }
+    #endregion
+}

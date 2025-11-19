@@ -1,0 +1,36 @@
+﻿.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background-color: white;
+    transition: transform 0.3s ease;
+    z-index: 1050;
+    transform: translateX(-100%);
+    width: 100vw;
+    max-width: 260px;
+}
+
+    .sidebar.show {
+        transform: translateX(0);
+    }
+
+@media (min-width: 768px) {
+    .sidebar {
+        position: static;
+        transform: none !important;
+        width: 60px;
+        height: auto;
+        z-index: auto;
+    }
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1040;
+}

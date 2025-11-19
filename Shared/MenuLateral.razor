@@ -1,0 +1,41 @@
+﻿@using Blazored.SessionStorage
+
+<div class="barraLateral @this._estadoMenu">
+
+    <div class="cabecera @this._estadoMenu" tabindex="0">
+        <NavLink class="nav-link logo" href=@(URLsPantallas.Menu)>
+            <span class="logo @this._estadoMenu"></span>
+        </NavLink>
+    </div>
+
+    <div class="flex-column">
+        <MenuNavLinkDirecto Icono="icono-menu"
+                            hRef=@(this.Navegacion.ObtenerRuta(URLsPantallas.Menu)) NombreSubMenu=@this.Traductor["spanMenuNav"]>
+        </MenuNavLinkDirecto>
+    </div>
+</div>
+
+@code {
+    #region ***** DEPENDENCIAS *****
+
+    [Inject]
+    public required IStringLocalizer<TrGeneral> Traductor { get; set; }
+
+    [Inject]
+    public ISessionStorageService SesionStorage { get; set; }
+
+    [Inject]
+    public required ServicioNavegacion Navegacion { get; set; }
+
+    #endregion
+
+    #region ***** VARIABLES INTERNAS *****
+
+    private string _estadoMenu = "";
+    private string _estadoSubMenu = "lateral";
+
+    #endregion
+
+    #region ***** MÉTODOS *****
+    #endregion
+}

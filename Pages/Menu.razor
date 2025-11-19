@@ -1,0 +1,204 @@
+﻿@using System.Collections.Generic
+@page "/"
+@page "/menu"
+@* Required *@
+<MudThemeProvider />
+<MudPopoverProvider />
+
+@* Needed for dialogs *@
+<MudDialogProvider />
+
+@* Needed for snackbars *@
+<MudSnackbarProvider />
+
+@if (MenuAbierto)
+{
+    <div class="overlay" @onclick="ToggleMenu"></div>
+}
+
+<!-- Botón hamburguesa siempre visible y encima -->
+<button class="btn d-md-none position-fixed top-0 start-0 m-3" style="width: 40px; height: 40px; z-index: 1060;" @onclick="ToggleMenu">
+    <i class="bi bi-list fs-2"></i>
+</button>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- Barra lateral -->
+        <div class="col-md-1 p-0">
+            <div class="sidebar bg-white border-end p-3 @(MenuAbierto ? "show" : "")">
+                <div class="d-flex flex-column gap-4 align-items-center">
+                    <a href="#"><img src="Recursos/EstiloLibreLogo.svg" width="24" /></a>
+                    <a href="#"><i class="bi bi-house-door fs-4"></i></a>
+                    <a href="#"><i class="bi bi-search fs-4"></i></a>
+                    <a href="#"><i class="bi bi-window fs-4"></i></a>
+                    <a href="#"><i class="bi bi-plus fs-4"></i></a>
+                    <a href="#"><i class="bi bi-bell fs-4"></i></a>
+                    <a href="#"><i class="bi bi-chat fs-4"></i></a>
+                    <a href="#"><i class="bi bi-gear fs-4"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenido -->
+        <div class="col-12 col-md-11 p-4">
+
+            <!-- Encabezado con hamburguesa, buscador y usuario -->
+            <div class="d-flex align-items-center justify-content-between gap-2 mb-4">
+
+                <!-- Botón hamburguesa solo visible en móvil -->
+                <button class="btn d-md-none p-0" style="width: 40px; height: 40px;" @onclick="ToggleMenu">
+                    <i class="bi bi-list fs-3"></i>
+                </button>
+
+                <!-- Buscador -->
+                <input class="form-control form-control-lg rounded-pill flex-grow-1" type="search" placeholder="Buscar" style="min-width: 0;" />
+
+                <!-- Menú de usuario -->
+                <MudMenu Color="Color.Default" Variant="Variant.Outlined">
+                    <ActivatorContent>
+                        <MudAvatar Size="Size.Medium">
+                            <MudImage Src="Recursos/user.jpg" Alt="Perfil"></MudImage>
+                        </MudAvatar>
+                    </ActivatorContent>
+
+                    <ChildContent>
+                        <MudMenuItem Disabled="true">
+                            <div class="px-2">
+                                <small class="text-muted">Actualmente en</small><br />
+                                <strong>Carolina</strong><br />
+                                <small class="text-muted">a23carolinabc@iessanclem...</small>
+                            </div>
+                        </MudMenuItem>
+
+                        <MudDivider />
+
+                        <MudMenuItem>Configuración</MudMenuItem>
+                        <MudMenuItem OnClick="CerrarSesion">Cerrar sesión</MudMenuItem>
+                    </ChildContent>
+                </MudMenu>
+
+
+
+
+
+            </div>
+
+
+            <!-- Ideas sugeridas -->
+            <div class="mb-5">
+                <h5><strong>Tablero</strong></h5>
+                @* <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-3">
+                    @foreach (var idea in Tableros)
+                    {
+                        <div class="col">
+                            <div class="card h-100">
+                                <img src="@idea.ImagenUrl" class="card-img-top" />
+                                <div class="card-body">
+                                    <h6 class="card-title">@idea.Titulo</h6>
+                                    <p class="card-text"><small>@idea.Detalles</small></p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div> *@
+                <!-- Pines (scroll infinito) -->
+                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-3" @ref="pinesGrid">
+                    @foreach (var pin in Pines)
+                    {
+                        <div class="col">
+                            <div class="card border-0">
+                                <img src="@pin.ImagenUrl" class="img-fluid rounded" />
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+           
+            @if (Cargando)
+            {
+                <div class="text-center my-4">
+                    <div class="spinner-border text-secondary" role="status"></div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private ElementReference pinesGrid;
+    private bool Cargando = false;
+    private int Pagina = 0;
+    private int TamPagina = 6;
+    private List<Tarjeta> Tableros = new();
+    private List<Pin> Pines = new();
+    private bool MenuAbierto = false;
+    [Inject]
+    private ServicioNavegacion Navegacion { get; set; }
+
+    private void ToggleMenu() => MenuAbierto = !MenuAbierto;
+
+    [Inject]
+    private IJSRuntime JS { get; set; }
+
+    protected override void OnInitialized()
+    {
+        this.Tableros = new()
+        {
+            new Tarjeta { ImagenUrl = "https://placekitten.com/300/200", Titulo = "Fotos de animales", Detalles = "59 Pines · 6 meses" },
+            new Tarjeta { ImagenUrl = "https://placehold.co/300x200?text=Novela", Titulo = "Novela estilo inglesa", Detalles = "52 Pines · 1 mes" },
+            new Tarjeta { ImagenUrl = "https://placehold.co/300x200?text=Flores", Titulo = "Flores raras", Detalles = "44 Pines · 3 meses" }
+        };
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await CargarMasPines();
+            await JS.InvokeVoidAsync("Utils.Scroll", DotNetObjectReference.Create(this), pinesGrid);
+        }
+    }
+
+    [JSInvokable]
+    public async Task OnScrollAlFinal()
+    {
+        if (!Cargando)
+        {
+            await CargarMasPines();
+            StateHasChanged();
+        }
+    }
+
+    private void CerrarSesion()
+    {
+        this.Navegacion.NavegarA(URLsPantallas.Login);
+    }
+
+    private async Task CargarMasPines()
+    {
+        Cargando = true;
+        await Task.Delay(1000);
+        for (int i = 0; i < TamPagina; i++)
+        {
+            Pines.Add(
+                new Pin { ImagenUrl = $"Recursos/outfit{i}.jpg" }
+            );
+        }
+        Pagina++;
+        Cargando = false;
+    }
+
+    public class Tarjeta
+    {
+        public string ImagenUrl { get; set; } = "";
+        public string Titulo { get; set; } = "";
+        public string Detalles { get; set; } = "";
+    }
+
+    public class Pin
+    {
+        public string ImagenUrl { get; set; } = "";
+    }
+}

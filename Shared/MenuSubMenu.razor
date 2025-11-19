@@ -1,0 +1,35 @@
+﻿<div class="elemento" @onmouseleave=@(() => this._plegarSubMenu=true)>
+    <div class="principal" @onmouseover=@(() => this._plegarSubMenu=false)>
+        <MenuSpanIcono Icono=@Icono></MenuSpanIcono>
+        @NombreSubMenu
+    </div>
+    <div class="subMenu @EstadoSubMenu" hidden=@this._plegarSubMenu>
+        @OpcionesSubMenu
+    </div>
+</div>
+
+@code {
+    #region ***** PARÁMETROS *****
+
+    [Parameter, EditorRequired]
+    public string EstadoSubMenu{ get; set; }
+
+    [Parameter, EditorRequired]
+    public string NombreSubMenu { get; set; }
+
+    [Parameter, EditorRequired]
+    public string Icono { get; set; }
+
+    [Parameter]
+    public bool OcultarFlecha { get; set; }
+
+    [Parameter, EditorRequired]
+    public RenderFragment? OpcionesSubMenu { get; set; }
+
+    #endregion
+    #region ***** VARIABLES INTERNAS *****
+
+    private bool _plegarSubMenu = true;
+
+    #endregion
+}

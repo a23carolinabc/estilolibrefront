@@ -1,0 +1,33 @@
+﻿@inherits InputBase<bool>
+@using System.Linq.Expressions
+
+<label class="contenedorCheckBox">
+    @Label
+    <InputCheckbox @bind-Value=@CurrentValue @attributes=@AtributosInput></InputCheckbox>
+    <span class="tick"></span>
+    @if (!string.IsNullOrEmpty(MensajeToolTip))
+    {
+        <span class="tooltip">@MensajeToolTip</span>
+    }    
+</label>
+@code {
+    #region ***** PARÁMETROS *****
+    [Parameter]
+    public string? Label { get; set; }
+
+    [Parameter]
+    public string? MensajeToolTip { get; set; }
+
+    [Parameter]
+    public Dictionary<string, object>? AtributosInput { get; set; }
+    #endregion
+
+    #region ***** MÉTODOS *****
+    protected override bool TryParseValueFromString(string? value, out bool result, out string validationErrorMessage)
+    {
+        result = Convert.ToBoolean(value);
+        validationErrorMessage = null;
+        return true;
+    }
+    #endregion
+}

@@ -1,0 +1,127 @@
+﻿<section class="botones">
+    @if (!this._ocultarCambiarRegistro)
+    {
+        <fieldset hidden=@this._ocultarCambiarRegistro>
+            <ToolTip Mensaje=@this.Traductor["spanAnteriorRegistro"]>
+                <PuntoAnclajeToolTip>
+                    <button class="btn flechas" @onclick=@BotonAnterior @onclick:stopPropagation=true><span class="flecha izquierda"></span></button>
+                </PuntoAnclajeToolTip>
+            </ToolTip>
+        </fieldset>
+    }
+
+    <AuthorizeView Policy=@this.PermisoModificacion>
+        <Authorized>
+            <button class="btn guardar" @onclick=@BotonGuardar @onclick:stopPropagation=true disabled=@this._disabledGuardar hidden=@this._hiddenGuardar>
+                @this.Traductor["btnGuardar"]
+            </button>
+            <button class="btn" @onclick=@BotonNuevo @onclick:stopPropagation=true disabled=@this._disabledNuevo>
+                @this.Traductor["btnNuevo"]
+            </button>
+            <button class="btn eliminar" @onclick=@BotonEliminar @onclick:stopPropagation=true disabled=@this._disabledEliminar>
+                @this.Traductor["btnEliminar"]
+            </button>
+        </Authorized>        
+    </AuthorizeView>  
+
+    <button class="btn" @onclick=@BotonBuscador @onclick:stopPropagation=true>
+        @this.Traductor["btnBuscador"]
+    </button> 
+
+    @if (!this._ocultarCambiarRegistro)
+    {
+        <fieldset hidden=@this._ocultarCambiarRegistro>
+            <ToolTip Mensaje=@this.Traductor["spanSiguienteRegistro"]>
+                <PuntoAnclajeToolTip>
+                    <button class="btn flechas" @onclick=@BotonSiguiente @onclick:stopPropagation=true><span class="flecha"></span></button>
+                </PuntoAnclajeToolTip>
+            </ToolTip>
+        </fieldset>
+    }    
+</section>
+
+@code {
+    #region ***** DEPENDENCIAS *****
+    [Inject]
+    public IStringLocalizer<TrGeneral> Traductor { get; set; }
+    #endregion
+
+    #region ***** PARÁMETROS *****
+    [Parameter]
+    public EventCallback<bool> OnGuardarSeleccionado { get; set; }
+    [Parameter]
+    public EventCallback<bool> OnNuevoSeleccionado { get; set; }
+    [Parameter]
+    public EventCallback<bool> OnEliminarSeleccionado { get; set; }
+    [Parameter]
+    public EventCallback<bool> OnBuscadorSeleccionado { get; set; }
+    [Parameter]
+    public EventCallback<bool> OnSiguienteSeleccionado { get; set; }
+    [Parameter]
+    public EventCallback<bool> OnAnteriorSeleccionado { get; set; }
+    [Parameter]
+    public string PermisoModificacion { get; set; }
+    #endregion
+
+    #region ***** VARIABLES INTERNAS *****
+    private bool _hiddenGuardar;
+    private bool _disabledGuardar;
+    private bool _disabledNuevo;
+    private bool _disabledEliminar;
+    private bool _ocultarCambiarRegistro = true;
+    #endregion
+
+    #region ***** MÉTODOS PÚBLICOS *****
+    
+    public void OcultarBotonAnteriorSiguiente(bool estado)
+    {
+        this._ocultarCambiarRegistro = estado;
+        StateHasChanged();
+    }
+    public void HabilitarBotonGuardar()
+    {
+        this._disabledGuardar = false;
+        StateHasChanged();
+    }
+    public void HabilitarBotonNuevo()
+    {
+        this._disabledNuevo = false;
+        StateHasChanged();
+    }
+    public void HabilitarBotonEliminar()
+    {
+        this._disabledEliminar = false;
+        StateHasChanged();
+    }
+    #endregion
+
+    #region ***** MÉTODOS PRIVADOS *****
+    private async void BotonGuardar()
+    {
+        this._disabledGuardar = true;
+        await this.OnGuardarSeleccionado.InvokeAsync(true);
+    }
+    private async void BotonNuevo()
+    {
+        this._disabledNuevo = true;
+        await this.OnNuevoSeleccionado.InvokeAsync(true);
+    }
+    private async void BotonEliminar()
+    {
+        this._disabledEliminar = true;
+        await this.OnEliminarSeleccionado.InvokeAsync(true);
+    }
+    private async void BotonBuscador()
+    {
+        await this.OnBuscadorSeleccionado.InvokeAsync(true);
+    }
+    private async void BotonSiguiente()
+    {
+        await this.OnSiguienteSeleccionado.InvokeAsync(true);
+    }
+    private async void BotonAnterior()
+    {
+        await this.OnAnteriorSeleccionado.InvokeAsync(true);
+    }
+    #endregion
+}

@@ -1,0 +1,47 @@
+﻿@inherits LayoutComponentBase
+@* Required *@
+<MudThemeProvider />
+<MudPopoverProvider />
+
+@* Needed for dialogs *@
+<MudDialogProvider />
+
+@* Needed for snackbars *@
+<MudSnackbarProvider />
+
+<div class="vistaCompleta">
+    <MenuLateral/>
+    <main>
+        <CascadingValue Value="this">                     
+            @Body
+        </CascadingValue>        
+    </main>
+</div>
+
+@code {
+    #region ***** DEPENDENCIAS *****
+    #endregion
+
+    #region ***** PARÁMETROS *****
+    #endregion
+
+    #region ***** ARGUMENTOS *****
+
+    public string? TituloCabecera { get; set; } = "";
+
+    #endregion
+
+    #region ***** MÉTODOS PÚBLICOS*****    
+
+    //Actualizar título de la cabecera.
+    public void CambiarTituloCabecera(string titulo)
+    {
+        TituloCabecera = titulo;
+        StateHasChanged();
+    }
+
+    #endregion
+
+    #region ***** MÉTODOS PRIVADOS*****
+    #endregion
+}

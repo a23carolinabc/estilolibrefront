@@ -1,0 +1,66 @@
+﻿@inherits InputBase<int>
+
+@using Microsoft.AspNetCore.Components.Rendering
+@using System.Linq.Expressions
+@using System.Text.RegularExpressions;
+
+<div class=@ClaseDiv>
+    <label style="width:max-content;">
+        @Label
+        <Validacion For=@ValidationFor></Validacion>
+    </label>
+    <InputText style="width:100%;text-align:end;padding-right:1rem;" @bind-Value=@CurrentValueAsString
+        @attributes=@AtributosInput></InputText>
+</div>
+
+@code {
+    #region ***** DEPENDENCIAS *****
+    [Inject]
+    public IStringLocalizer<TrErrores>? TraductorErrores { get; set; }
+    #endregion
+
+    #region ***** PARÁMETROS *****
+    [Parameter]
+    public string? ClaseDiv { get; set; }    
+    [Parameter]
+    public int? CompletarConCerosHastaNum { get; set; }
+    [Parameter]
+    public string? Label { get; set; }
+    [Parameter]
+    public Dictionary<string, object>? AtributosInput { get; set; }
+
+    [Parameter, EditorRequired]
+    public Expression<Func<int>> ValidationFor { get; set; } = default!;
+    #endregion
+
+    #region ***** MÉTODOS *****
+    protected override string FormatValueAsString(int value)
+    {
+        if (CompletarConCerosHastaNum > 0)
+        {
+            return value.ToString(new String('0', (int)CompletarConCerosHastaNum));
+        }
+        else
+        {
+            return value.ToString();
+        }
+
+    }
+    protected override bool TryParseValueFromString(string? value, out int result, out string validationErrorMessage)
+    {
+        if (String.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value)) { value = "0"; }
+        Match numeroEntero = new Regex("^[0-9]*$").Match(value);
+        if (!numeroEntero.Success)
+        {
+            result = 0;
+            validationErrorMessage = TraductorErrores!["ERR_NumeroEntero"];
+            return false;
+        } else
+        {
+            result = Convert.ToInt32(value);
+            validationErrorMessage = null;
+            return true;
+        }
+    }
+    #endregion
+}

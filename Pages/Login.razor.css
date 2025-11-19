@@ -1,0 +1,94 @@
+﻿.pantalla {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.3)), url("Recursos/texturaZebra.jpg");
+    width: 100vw;
+    height: 100vh;
+}
+    ::deep form:has(.errorMsj.True) input {
+        border: none;
+        outline: none;
+        box-shadow: white 0px 0px 5px 0px;
+    }
+
+.logo {
+    height: 6rem;
+    width: 5rem;
+    background-image: url("Recursos/EstiloLibreLogo.svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center center
+}
+
+label {
+    font-size: 2rem;
+    font-weight: 600;
+    color: black;
+}
+
+::deep input {
+    width: 90%;
+    border-radius: 30px;
+    border: solid 1px black;
+    font-size: 0.9rem;
+  /*  height: 2.3rem;
+    padding: 0.5rem;
+    margin-bottom: 1.5rem;*/
+}
+::deep input:last-of-type {
+    margin-bottom: 1rem;
+}
+
+    ::deep input:focus {
+        outline-color: rgb(92, 143, 148, 0.8);
+    }
+
+.errorMsj {
+    font-size: 0.9rem;
+    color: white;
+    position: absolute;
+    width: 15rem;
+    top: 11rem;
+    left: 0;
+    visibility: hidden;
+    line-height: 1rem;
+}
+
+    .errorMsj.True {
+        visibility: visible;
+    }
+
+::deep a {
+    align-self: flex-start;
+    font-size: 1rem !important;
+}
+::deep a.recuperar{
+    color: black !important;
+}
+
+button {
+    font-size: 1.1rem;
+    width: fit-content;
+    padding: 0.5rem 1.2rem;
+    background-color: #9FA614;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    margin-top:1.8rem;
+    transition:.3s;
+}
+
+    button:hover {
+        font-size:1.2rem;
+    }
+
+    button:active {
+        opacity: .75;
+    }
+
+    button:disabled {
+        border: 1px solid #eeeeee;
+        background-color: #eeeeee;
+        color: dimgrey;
+        font-weight: 500;
+        font-size: 0.8rem;
+        opacity: 0.70;
+    }

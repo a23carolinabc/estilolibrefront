@@ -1,0 +1,115 @@
+﻿.botones {
+    position: absolute;
+    top: 3.5rem;
+    left: 41%;
+    background-color: white;
+    border-radius: 20px;
+    width: 350px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-around;
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+    z-index:5;
+    transition:.5s;
+}
+    .botones:has(.btn.flechas) {
+        left: 40%;
+        width: 430px;
+    }
+
+    .botones .btn {
+        background-color: white;
+        color: #597997;
+        font-size: .9rem;
+        width: max-content;
+        height: 2.5rem;
+        padding: .0rem 1rem;
+        border-radius: 20px;
+        margin: 0.3rem;
+    }
+
+        .botones .btn.flechas {
+            padding: .5rem;  
+            opacity:0;
+            animation: fadein 0.5s ease 0.5s normal forwards running;
+        }
+
+        .botones .btn:hover, .botones .btn.eliminar:hover, .botones .btn.guardar:hover {
+            background-color: #eeeeee;
+        }
+
+        .botones .btn.guardar:hover, .botones .btn.eliminar:hover {
+            color: #597997;
+            border-color:#eeeeee;
+        }
+
+        .botones .btn:focus {
+            box-shadow: none;
+        }
+
+        .botones .btn:active, .botones .btn.eliminar:active, .botones .btn.guardar:active {
+            background-color: #eeeeee;
+            font-weight: 500;
+            font-size: 0.85rem;
+            padding: .0rem 1.05rem;
+        }
+
+        .botones .btn:disabled, .botones .btn.eliminar:disabled, .botones .btn.guardar:disabled {
+            background-color: #eeeeee;
+            border-color: #eeeeee;
+            color: dimgrey;
+            font-weight: 500;
+            font-size: 0.8rem;
+            opacity: 0.70;
+        }
+
+        .botones .btn.eliminar {
+            color: #597997;
+            border-color: #597997;
+        }
+
+        .botones .btn.guardar {
+            background-color: #597997;
+            color: white;
+        }
+
+        .botones .btn.flechas:hover .flecha {
+            filter: brightness(0) saturate(100%) invert(48%) sepia(17%) saturate(798%) hue-rotate(168deg) brightness(90%) contrast(92%);
+        }
+        .botones .btn.flechas:active {
+            padding: .5rem;
+        }
+
+.flecha {
+    display: inline-block;
+    width: 1.2rem;
+    height: 1.2rem;
+    cursor: pointer;
+    background-image: url("Recursos/icono-flechasMenu.svg");
+    offset-rotate: 180deg;
+    filter: brightness(0) saturate(100%) invert(48%) sepia(17%) saturate(798%) hue-rotate(168deg) brightness(90%) contrast(92%);
+}
+
+    .flecha.izquierda {
+        rotate: 180deg;
+    }
+
+@media (max-width: 900px) {
+    .botones {
+        left: 30%;
+    }
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+        visibility: hidden;
+        display: none;
+    }
+
+    to {
+        opacity: 1;
+        visibility: visible;
+        display: flex;
+    }
+}
