@@ -1,22 +1,24 @@
 ﻿@inherits LayoutComponentBase
+
 @* Required *@
 <MudThemeProvider />
 <MudPopoverProvider />
-
 @* Needed for dialogs *@
 <MudDialogProvider />
-
 @* Needed for snackbars *@
 <MudSnackbarProvider />
 
-<div class="vistaCompleta">
-    <MenuLateral/>
-    <main>
-        <CascadingValue Value="this">                     
+<MudLayout>
+    <!-- Menú lateral (solo desktop/tablet) -->
+    <MenuLateral />
+
+    <!-- Contenido principal sin padding adicional -->
+    <MudMainContent Class="main-content-custom">
+        <CascadingValue Value="this">
             @Body
-        </CascadingValue>        
-    </main>
-</div>
+        </CascadingValue>
+    </MudMainContent>
+</MudLayout>
 
 @code {
     #region ***** DEPENDENCIAS *****
@@ -25,23 +27,26 @@
     #region ***** PARÁMETROS *****
     #endregion
 
-    #region ***** ARGUMENTOS *****
+    #region ***** PROPIEDADES PÚBLICAS *****
 
-    public string? TituloCabecera { get; set; } = "";
+    public string TituloCabecera { get; private set; } = string.Empty;
 
     #endregion
 
-    #region ***** MÉTODOS PÚBLICOS*****    
+    #region ***** MÉTODOS PÚBLICOS *****
 
-    //Actualizar título de la cabecera.
-    public void CambiarTituloCabecera(string titulo)
+    /// <summary>
+    /// Actualiza el título de la cabecera y refresca la interfaz.
+    /// </summary>
+    /// <param name="strTitulo">Nuevo título a mostrar</param>
+    public void CambiarTituloCabecera(string strTitulo)
     {
-        TituloCabecera = titulo;
-        StateHasChanged();
+        this.TituloCabecera = strTitulo ?? string.Empty;
+        this.StateHasChanged();
     }
 
     #endregion
 
-    #region ***** MÉTODOS PRIVADOS*****
+    #region ***** MÉTODOS PRIVADOS *****
     #endregion
 }

@@ -1,4 +1,8 @@
-.vistaCompleta {
+.main-content-custom {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+/*.vistaCompleta {
     position: relative;
     display: flex;
     flex-direction: row;
@@ -82,3 +86,4 @@ main ::deep label {
     font-size: 0.95rem;
     margin: 0;
 }
+*/

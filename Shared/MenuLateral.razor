@@ -1,21 +1,141 @@
-﻿@using Blazored.SessionStorage
+﻿@* MenuLateral.razor *@
+@inject NavigationManager NavigationManager
+@implements IDisposable
 
-<div class="barraLateral @this._estadoMenu">
+<MudHidden Breakpoint="Breakpoint.SmAndDown">
+    <!-- Menú lateral para Desktop/Tablet -->
+    <MudDrawer Open="true"
+               Elevation="1"
+               Variant="@DrawerVariant.Mini"
+               ClipMode="DrawerClipMode.Always"
+               Class="menu-lateral-desktop">
+        <div class="d-flex flex-column" style="height: 100%;">
+            <!-- Logo/Icono principal -->
+            <MudNavLink Href="/"
+                        Icon="@Icons.Custom.Brands.Pinterest"
+                        IconColor="Color.Error"
+                        Class="nav-link-principal" />
 
-    <div class="cabecera @this._estadoMenu" tabindex="0">
-        <NavLink class="nav-link logo" href=@(URLsPantallas.Menu)>
-            <span class="logo @this._estadoMenu"></span>
-        </NavLink>
-    </div>
+            <MudDivider Class="my-2" />
 
-    <div class="flex-column">
-        <MenuNavLinkDirecto Icono="icono-menu"
-                            hRef=@(this.Navegacion.ObtenerRuta(URLsPantallas.Menu)) NombreSubMenu=@this.Traductor["spanMenuNav"]>
-        </MenuNavLinkDirecto>
-    </div>
-</div>
+            <!-- Navegación principal -->
+            <MudNavMenu Class="flex-grow-1">
+                <MudNavLink Href="/inicio"
+                            Icon="@Icons.Material.Filled.Home"
+                            Match="NavLinkMatch.All"
+                            OnClick="@(() => this.NavegarA("/inicio"))" />
+
+                <MudNavLink Href="/explorar"
+                            Icon="@Icons.Material.Filled.Explore"
+                            OnClick="@(() => this.NavegarA("/explorar"))" />
+
+                <MudNavLink Href="/crear"
+                            Icon="@Icons.Material.Filled.Add"
+                            OnClick="@(() => this.NavegarA("/crear"))" />
+
+                <MudNavLink Href="/notificaciones"
+                            Icon="@Icons.Material.Filled.Notifications"
+                            OnClick="@(() => this.NavegarA("/notificaciones"))" />
+
+                <MudNavLink Href="/mensajes"
+                            Icon="@Icons.Material.Filled.Message"
+                            OnClick="@(() => this.NavegarA("/mensajes"))" />
+            </MudNavMenu>
+
+            <MudDivider Class="my-2" />
+
+            <!-- Configuración al final -->
+            <MudNavMenu>
+                <MudNavLink Href="/configuracion"
+                            Icon="@Icons.Material.Filled.Settings"
+                            OnClick="@(() => this.NavegarA("/configuracion"))" />
+            </MudNavMenu>
+        </div>
+    </MudDrawer>
+</MudHidden>
+
+<MudHidden Breakpoint="Breakpoint.MdAndUp">
+    <!-- Menú inferior para Móvil -->
+    <MudPaper Elevation="3" Class="menu-inferior-mobile">
+        <MudNavMenu Class="d-flex flex-row justify-space-around align-center">
+            <MudNavLink Href="/inicio"
+                        Icon="@Icons.Material.Filled.Home"
+                        Match="NavLinkMatch.All"
+                        OnClick="@(() => this.NavegarA("/inicio"))"
+                        Class="nav-link-mobile" />
+
+            <MudNavLink Href="/explorar"
+                        Icon="@Icons.Material.Filled.Explore"
+                        OnClick="@(() => this.NavegarA("/explorar"))"
+                        Class="nav-link-mobile" />
+
+            <MudNavLink Href="/crear"
+                        Icon="@Icons.Material.Filled.Add"
+                        OnClick="@(() => this.NavegarA("/crear"))"
+                        Class="nav-link-mobile" />
+
+            <MudNavLink Href="/notificaciones"
+                        Icon="@Icons.Material.Filled.Notifications"
+                        OnClick="@(() => this.NavegarA("/notificaciones"))"
+                        Class="nav-link-mobile" />
+
+            <MudNavLink Href="/mensajes"
+                        Icon="@Icons.Material.Filled.Message"
+                        OnClick="@(() => this.NavegarA("/mensajes"))"
+                        Class="nav-link-mobile" />
+        </MudNavMenu>
+    </MudPaper>
+</MudHidden>
 
 @code {
+    #region ***** DEPENDENCIAS *****
+    #endregion
+
+    #region ***** PARÁMETROS *****
+    #endregion
+
+    #region ***** PROPIEDADES PRIVADAS *****
+
+    private string _rutaActual = string.Empty;
+
+    #endregion
+
+    #region ***** MÉTODOS LIFECYCLE *****
+
+    protected override void OnInitialized()
+    {
+        this._rutaActual = this.NavigationManager.Uri;
+        this.NavigationManager.LocationChanged += this.OnLocationChanged;
+    }
+
+    #endregion
+
+    #region ***** MÉTODOS PÚBLICOS *****
+
+    public void Dispose()
+    {
+        this.NavigationManager.LocationChanged -= this.OnLocationChanged;
+    }
+
+    #endregion
+
+    #region ***** MÉTODOS PRIVADOS *****
+
+    private void NavegarA(string strRuta)
+    {
+        this.NavigationManager.NavigateTo(strRuta);
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        this._rutaActual = e.Location;
+        this.StateHasChanged();
+    }
+
+    #endregion
+}
+
+@* @code {
     #region ***** DEPENDENCIAS *****
 
     [Inject]
@@ -39,3 +159,4 @@
     #region ***** MÉTODOS *****
     #endregion
 }
+ *@

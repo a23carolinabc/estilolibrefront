@@ -1,375 +1,74 @@
-/*#region Animaciones*/
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
+/* Estilos para menú lateral desktop */
+.menu-lateral-desktop {
+    width: 80px !important;
+    min-width: 80px !important;
 }
 
-@-webkit-keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
+.nav-link-principal {
+    padding: 16px 0;
+    justify-content: center;
 }
-/*#endregion */
 
-.barraLateral {
+.mud-nav-link {
+    padding: 12px 0;
+    justify-content: center;
+    border-radius: 8px;
+    margin: 4px 8px;
+}
+
+    .mud-nav-link:hover {
+        background-color: rgba(0, 0, 0, 0.04);
+    }
+
+.mud-nav-link-active {
+    background-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Estilos para menú inferior móvil */
+.menu-inferior-mobile {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    z-index: 1300;
     background-color: white;
-    width: 82px;
-    height: 97vh;
-    border-radius: 20px;
-    position: relative;
-    transition: all 1.5s;
-    margin: .5rem .5rem .5rem 1rem;
-    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
 }
 
-    .barraLateral .cabecera {
-        width: 100%;
-        height: 80px;
-        display: flex;
-        justify-content: space-around;
+    .menu-inferior-mobile .mud-nav-menu {
+        height: 100%;
+        padding: 0;
+        margin: 0;
     }
 
-.cabecera ::deep .nav-link.logo {
-    padding: 0;
-}
-.cabecera .logo span {
-    margin-left: 3px;
-    display: inline-block;
-    height: 4rem;
-    width: 3rem;
-    background-image: url("Recursos/EstiloLibreLogo.svg");
-    background-repeat: no-repeat;
-    background-size: cover;
+.nav-link-mobile {
+    flex: 1;
+    padding: 8px !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    min-width: 60px;
 }
 
-@media (min-height: 815px) {
-    .barraLateral {
-        height: 96.5vh;
+    .nav-link-mobile:hover {
+        background-color: rgba(0, 0, 0, 0.04);
+    }
+
+    .nav-link-mobile.mud-nav-link-active {
+        background-color: rgba(0, 0, 0, 0.08);
+        border-bottom: 2px solid var(--mud-palette-primary);
+    }
+
+/* Ajustar el contenido principal en móvil para el menú inferior */
+@media (max-width: 960px) {
+    main, .mud-main-content {
+        padding-bottom: 70px !important;
     }
 }
 
-@media (min-height: 850px) {
-    .barraLateral {
-        height: 96vh;
+/* Ajustar el contenido principal en desktop para el menú lateral */
+@media (min-width: 961px) {
+    .mud-main-content {
+        margin-left: 80px;
     }
 }
-
-@media (min-height: 930px) {
-    .barraLateral {
-        height: 95vh;
-    }
-}
-
-@media (min-height: 990px) {
-    .barraLateral {
-        height: 94.5vh;
-    }
-}
-
-/*@media (max-width: 1280px) {
-    .barraLateral, .barraLateral.abierto {
-        min-width: 82px;
-        max-width: 82px;
-    }
-    .barraLateral .cabecera.abierto {
-        width: 80px;
-    }
-    .cabecera .logo, .cabecera .logo.abierto {
-        width: 5rem;
-    }
-    .cabecera .titulo, .cabecera .titulo.abierto {
-        width: 0rem;
-        font-size: 0rem;
-        opacity: 0;
-    }
-}*/
-
-/*#region antiguoCSS*/
-
-/*
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@-webkit-keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-.barraLateral {
-    background-color: #3E4D59;
-    width: 82px;
-    height: 97%;
-    border-radius: 20px;
-    position: relative;
-    transition: all 1.5s;
-    margin: .5rem .5rem .5rem 1rem
-}
-
-    .barraLateral.abierto {
-        width: 200px;
-    }
-
-    
-    .barraLateral .cabecera {
-        width: 80px;
-        height: 90px;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
-        transition: all 1.5s ease;
-    }
-
-        .barraLateral .cabecera.abierto {
-            width: 200px;
-        }
-
-
-.cabecera .titulo {
-    padding: 0;
-    opacity: 0;
-    font-size: 0.5rem;
-    width: 10rem;
-    color: white;
-    font-weight: 800;
-    text-align: center;
-    transition: all 1.5s ease;
-}
-
-    .cabecera .titulo.abierto {
-        font-size: 0.9rem;
-        opacity: 1;
-    }
-
-.cabecera ::deep .nav-link.logo {
-    padding: 0;
-    height: 4rem;
-}
-
-.cabecera .logo, .cabecera .logo.abierto {
-    margin-left: 2px;
-    display: inline-block;
-    height: 4rem;
-    width: 5rem;
-    filter: invert(100%);
-    transition: all 1.5s ease;
-    background-image: url("Recursos/logo.svg");
-    background-repeat: no-repeat;
-    background-size: 5rem 4rem;
-}
-
-.icono {
-    display: inline-block;
-    width: 1.1rem;
-    height: 1.1rem;
-    filter: invert(100%);
-    transition: all 1.5s ease;
-    cursor: pointer;
-}
-
-    .icono.abierto {
-        margin-right: 0.75rem;
-        top: -1px;
-    }
-
-
-.icono-menu {
-    background: url("Recursos/icono-menu.svg");
-}
-
-.icono-formulario {
-    background-image: url("Recursos/icono-formulario.svg");
-}
-
-.icono-listado {
-    background-image: url("Recursos/icono-listado.svg");
-    background-size: cover;
-}
-
-.icono-lupa {
-    background-image: url("Recursos/icono-lupa.svg");
-}
-
-.icono-carpeta {
-    background-image: url("Recursos/icono-carpeta.svg")
-}
-
-.icono-maquina {
-    background-image: url("Recursos/icono-maquina.svg");
-    background-size: contain;
-}
-
-.icono-flechaDesplegables {
-    -webkit-animation: fadeIn 1s;
-    animation: fadeIn 1s;
-    position: absolute;
-    right: 1rem;
-    margin-top: 1.1rem;
-    width: 0.8rem;
-    height: 0.8rem;
-    background-image: url("Recursos/icono-flechaDesplegables.svg")
-}
-
-.barraLateral .elemento {
-    padding-right: 0.9rem;
-    padding-left: 0.8rem;
-    font-size: 0rem;
-    position: relative;
-    padding-bottom: 0.5rem;
-    transition: all 1.5s;
-}
-
-    .barraLateral .elemento.abierto {
-        font-size: 0.95rem;
-    }
-
-.elemento:first-of-type {
-    padding-top: 0.2rem;
-}
-
-.elemento:last-of-type {
-    padding-bottom: 1rem;
-}
-
-.elemento ::deep a {
-    cursor: pointer;
-    overflow: hidden;
-    color: #d7d7d7;
-    border-radius: 3px;
-    height: 3rem;
-    display: flex;
-    align-items: center;
-    line-height: 3rem;
-}
-
-    .elemento ::deep a.active {
-        background-color: rgba(255,255,255,0.37);
-        color: white;
-    }
-
-    .elemento ::deep a:hover {
-        background-color: rgba(255,255,255,0.1);
-        color: white;
-    }
-
-.elemento .subMenu.lateral {
-    -webkit-animation: fadeIn 1s;
-    animation: fadeIn 1s;
-    font-size: 0.9rem;
-    list-style: none;
-    transition: all 3s;
-    position: absolute;
-    background-color: #3E4D59;
-    border-radius: 3px;
-    z-index: 5;
-    left: 82px;
-    top: 0;
-    width: max-content;
-}
-
-.elemento .subMenu.debajo {
-    -webkit-animation: fadeIn 1.5s;
-    animation: fadeIn 1.5s;
-    font-size: 0.9rem;
-    list-style: none;
-    transition: all 3s;
-}
-
-
-.barraLateral .btn-plegar {
-    width: 1.55rem;
-    height: 1.55rem;
-    background: none;
-    border: none;
-    position: absolute;
-    bottom: 1rem;
-    border-radius: 3px;
-    float: inline-end;
-    position: absolute;
-    right: 1rem;
-    background-image: url("Recursos/icono-flechasMenu.svg");
-    filter: invert(100%);
-    transition: all 1s ease;
-}
-
-.btn-plegar:hover {
-    background-color: rgba(255,255,255,0.1);
-}
-
-.barraLateral .btn-plegar.abierto {
-    rotate: -180deg;
-    transition: all 1s ease;
-}
-
-@media (max-width: 1280px) {
-    .barraLateral, .barraLateral.abierto {
-        min-width: 82px;
-        max-width: 82px;
-    }
-
-        .barraLateral .cabecera.abierto {
-            width: 80px;
-        }
-
-    .cabecera .logo, .cabecera .logo.abierto {
-        width: 5rem;
-    }
-
-    .cabecera .titulo, .cabecera .titulo.abierto {
-        width: 0rem;
-        font-size: 0rem;
-        opacity: 0;
-    }
-
-    .barraLateral .elemento, .barraLateral .elemento.abierto {
-        font-size: 0rem;
-    }
-
-    .icono, .icono.abierto {
-        min-width: 1.1rem;
-        min-height: 1.1rem;
-    }
-
-    .icono-flechaDesplegables {
-        display: none;
-    }
-
-    .elemento .subMenu.debajo, .elemento .subMenu.lateral {
-        -webkit-animation: fadeIn 1s;
-        animation: fadeIn 1s;
-        font-size: 0.9rem;
-        list-style: none;
-        transition: all 3s;
-        position: absolute;
-        background-color: #3E4D59;
-        border-radius: 3px;
-        z-index: 5;
-        left: 82px;
-        top: 0;
-    }
-
-    .barraLateral .btn-plegar, .barraLateral .btn-plegar.abierto {
-        display: none;
-    }
-}*/
-/*#endregion */
