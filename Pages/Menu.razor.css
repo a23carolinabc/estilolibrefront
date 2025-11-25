@@ -1,4 +1,7 @@
-﻿.appbar-inicio {
+﻿body{
+    background-color:red;
+}
+.appbar-inicio {
     background-color: white !important;
     color: black !important;
 }

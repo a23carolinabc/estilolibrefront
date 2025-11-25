@@ -9,8 +9,14 @@
 <MudSnackbarProvider />
 
 <MudLayout>
-    <!-- Menú lateral (solo desktop/tablet) -->
-    <MenuLateral />
+    <MudDrawer Open="true" Elevation="0" Variant="@DrawerVariant.Persistent"
+               Class="mud-theme-success" ClipMode="DrawerClipMode.Always">
+        <MenuLateral />
+    </MudDrawer>
+    
+    <MudAppBar Elevation="1" Dense="false" Class="appbar-principal">
+        <MenuSuperior />
+    </MudAppBar>
 
     <!-- Contenido principal sin padding adicional -->
     <MudMainContent Class="main-content-custom">
