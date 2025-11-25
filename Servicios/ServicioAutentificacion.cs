@@ -15,7 +15,7 @@ public class ServicioAutentificacion
 {
     #region ***** PROPIEDADES *****
 
-    private string _strUrlAutenticar = "Seguridad/autenticar";
+    private readonly string _strUrlAutenticar = "api/Seguridad/autenticar";
     private readonly IHttpClientFactory _factoriaClientesHttp;
     private readonly ServicioDatosContexto _srvDatosContexto;
 
@@ -94,7 +94,6 @@ public class ServicioAutentificacion
 
             //Avisar de que ha cambiado el estado de autenticación.
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(tokenDecodificado.GetClaimsPrincipal())));
-            //NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(this.GetClaimsPrincipal())));
 
             //Resultado correcto.
             return true;

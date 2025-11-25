@@ -142,15 +142,15 @@
         // Simular carga de datos
         await Task.Delay(500);
 
-        for (int i = this._lstItems.Count; i < this._lstItems.Count + 20; i++)
-        {
-            this._lstItems.Add(new ItemPinterest
-                {
-                    Id = i,
-                    ImagenUrl = this.ObtenerUrlImagenAleatoria(i),
-                    Altura = this.ObtenerAlturaAleatoria()
-                });
-        }
+        // for (int i = this._lstItems.Count; i < this._lstItems.Count + 20; i++)
+        // {
+        //     this._lstItems.Add(new ItemPinterest
+        //         {
+        //             Id = i,
+        //             ImagenUrl = this.ObtenerUrlImagenAleatoria(i),
+        //             Altura = this.ObtenerAlturaAleatoria()
+        //         });
+        // }
 
         this._bCargando = false;
         this.StateHasChanged();
