@@ -10,19 +10,21 @@
 
 <MudLayout>
     <MudDrawer Open="true" Elevation="0" Variant="@DrawerVariant.Persistent"
-               Class="mud-theme-success" ClipMode="DrawerClipMode.Always">
+               Class="mud-theme-success" ClipMode="DrawerClipMode.Never">
         <MenuLateral />
     </MudDrawer>
     
-    <MudAppBar Elevation="1" Dense="false" Class="appbar-principal">
-        <MenuSuperior />
-    </MudAppBar>
-
     <!-- Contenido principal sin padding adicional -->
     <MudMainContent Class="main-content-custom">
-        <CascadingValue Value="this">
-            @Body
-        </CascadingValue>
+        <MudAppBar Elevation="1" Dense="false" Class="appbar-principal">
+            <MenuSuperior />
+        </MudAppBar>
+
+        <div class="page-content-container">
+            <CascadingValue Value="this">
+                @Body
+            </CascadingValue>
+        </div>
     </MudMainContent>
 </MudLayout>
 

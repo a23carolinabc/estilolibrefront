@@ -1,132 +1,25 @@
-﻿body{
-    background-color:red;
-}
-.appbar-inicio {
-    background-color: white !important;
-    color: black !important;
+﻿/* Eliminar padding del contenido principal */
+.main-content-custom {
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
-.search-field {
-    max-width: 800px;
-    flex: 1;
+/* Contenedor para el contenido de las páginas (debajo del AppBar) */
+.page-content-container {
+    padding-top: 64px; /* Altura del AppBar */
+    min-height: calc(100vh - 64px);
 }
 
-/* Contenedor principal */
-.contenedor-masonry {
-    padding: 16px;
-    padding-bottom: 80px; /* Espacio para menú móvil */
+/* Opcional: Si quieres que el drawer tenga un estilo específico */
+::deep .mud-drawer {
+    border-right: 1px solid rgba(0, 0, 0, 0.12);
 }
 
-@media (min-width: 961px) {
-    .contenedor-masonry {
-        margin-left: 80px; /* Espacio para menú lateral */
-        padding-bottom: 16px;
-    }
-}
-
-/* Grid Masonry */
-.pinterest-masonry {
-    column-count: 5;
-    column-gap: 16px;
-    width: 100%;
-}
-
-@media (max-width: 1536px) {
-    .pinterest-masonry {
-        column-count: 4;
-    }
-}
-
-@media (max-width: 1280px) {
-    .pinterest-masonry {
-        column-count: 3;
-    }
-}
-
-@media (max-width: 960px) {
-    .pinterest-masonry {
-        column-count: 2;
-    }
-}
-
-@media (max-width: 600px) {
-    .pinterest-masonry {
-        column-count: 1;
-    }
-}
-
-/* Cards */
-.pinterest-card {
-    break-inside: avoid;
-    margin-bottom: 16px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    border-radius: 16px;
-    transition: all 0.2s ease-in-out;
-}
-
-    .pinterest-card:hover {
-        transform: scale(1.02);
-        box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-    }
-
-    .pinterest-card .mud-card-content {
-        padding: 0;
-    }
-
-/* Overlay en hover */
-.card-overlay {
-    position: absolute;
+/* Asegurar que el AppBar se quede fijo en la parte superior */
+::deep .appbar-principal {
+    position: fixed !important;
     top: 0;
-    left: 0;
+    left: var(--mud-drawer-width-left);
     right: 0;
-    bottom: 0;
-    background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 50%);
-    opacity: 0;
-    transition: opacity 0.2s ease-in-out;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    padding: 12px !important;
-}
-
-.pinterest-card:hover .card-overlay {
-    opacity: 1;
-}
-
-.card-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    width: 100%;
-}
-
-.btn-overlay {
-    background-color: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(8px);
-}
-
-    .btn-overlay:hover {
-        background-color: rgba(255, 255, 255, 1);
-    }
-
-.btn-guardar {
-    background-color: #e60023 !important;
-    color: white !important;
-    border-radius: 24px;
-    text-transform: none;
-    font-weight: 600;
-    padding: 8px 16px;
-}
-
-    .btn-guardar:hover {
-        background-color: #ad081b !important;
-    }
-
-/* Ajustes para móvil */
-@media (max-width: 960px) {
-    .search-field {
-        max-width: none;
-    }
+    z-index: 1200;
 }

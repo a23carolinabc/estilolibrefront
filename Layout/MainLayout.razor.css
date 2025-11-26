@@ -1,89 +1,25 @@
+/* Eliminar padding del contenido principal */
 .main-content-custom {
     padding: 0 !important;
     margin: 0 !important;
 }
-/*.vistaCompleta {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    background-color: #EEEEEE;
-    overflow: hidden;
-    height: 100vh;
+
+/* Contenedor para el contenido de las páginas (debajo del AppBar) */
+.page-content-container {
+    padding-top: 64px; /* Altura del AppBar */
+    min-height: calc(100vh - 64px);
 }
 
-main {
-    flex: 1;
-    height: 750px;
+/* Opcional: Si quieres que el drawer tenga un estilo específico */
+::deep .mud-drawer {
+    border-right: 1px solid rgba(0, 0, 0, 0.12);
 }
 
-::deep .pantalla {
-    background-color: white;
-    height: 87vh;
-    align-self: center;
-    border-radius: 20px;
-    overflow: hidden;
-    margin: .5rem 1rem;
-    padding: 1.5rem 1.5rem 1.5rem 1.5rem;
-    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+/* Asegurar que el AppBar se quede fijo en la parte superior */
+::deep .appbar-principal {
+    position: fixed !important;
+    top: 0;
+    left: var(--mud-drawer-width-left);
+    right: 0;
+    z-index: 1200;
 }
-
-main ::deep input[type=date]::-webkit-calendar-picker-indicator,
-main ::deep input[type=time]::-webkit-calendar-picker-indicator {
-    outline-color: rgb(89, 121, 151);
-}
-
-main ::deep input, main ::deep select, main ::deep textarea {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid lightgrey;
-    border-radius: 10px;
-    height: 2.2rem;
-    font-size: 0.9rem;
-}
-
-main ::deep input[type=number] {
-    text-align: end;
-}
-
-main ::deep input:hover, main ::deep select:hover, main ::deep textarea:hover {
-    border: 1px solid #597997;
-}
-
-    main ::deep input:focus, main ::deep select:focus, main ::deep textarea:focus {
-        border: 1px solid #597997;
-        box-shadow: none;
-    }
-
-main ::deep input:disabled, main ::deep select:disabled, main ::deep textarea:disabled {
-    border: 1px solid #eeeeee;
-    background-color: #eeeeee;
-    color: dimgrey;
-}
-
-main ::deep .titulo {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: .5rem;
-    color: #597997;
-}
-
-main ::deep .subtitulo {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #597997;
-}
-main ::deep .subtitulo2 {
-    margin-bottom: 0.5rem;
-    color: rgb(89, 121, 151,0.7);
-    font-weight: 600;
-}
-
-main ::deep label {
-    height: 2rem;
-    display: flex;
-    align-items: center;
-    font-size: 0.95rem;
-    margin: 0;
-}
-*/

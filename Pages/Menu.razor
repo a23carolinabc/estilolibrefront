@@ -5,46 +5,6 @@
 @inject IJSRuntime JSRuntime
 @implements IAsyncDisposable
 
-<!-- AppBar superior -->
-<MudAppBar Elevation="1" Dense="false" Class="appbar-inicio">
-    <MudIconButton Icon="@Icons.Custom.Brands.Pinterest"
-                   Color="Color.Error"
-                   Edge="Edge.Start"
-                   Href="/"
-                   Size="Size.Large" />
-
-    <MudTextField @bind-Value="_searchText"
-                  Placeholder="Buscar"
-                  Adornment="Adornment.Start"
-                  AdornmentIcon="@Icons.Material.Filled.Search"
-                  Variant="Variant.Outlined"
-                  Margin="Margin.Dense"
-                  Class="mx-4 search-field"
-                  FullWidth="false" />
-
-    <MudSpacer />
-
-    <MudHidden Breakpoint="Breakpoint.SmAndDown">
-        <MudIconButton Icon="@Icons.Material.Filled.Notifications"
-                       Color="Color.Default"
-                       Size="Size.Medium" />
-        <MudIconButton Icon="@Icons.Material.Filled.Message"
-                       Color="Color.Default"
-                       Size="Size.Medium" />
-        <MudAvatar Color="Color.Info" Size="Size.Medium">C</MudAvatar>
-        <MudIconButton Icon="@Icons.Material.Filled.KeyboardArrowDown"
-                       Color="Color.Default"
-                       Size="Size.Small" />
-    </MudHidden>
-
-    <MudHidden Breakpoint="Breakpoint.MdAndUp">
-        <MudIconButton Icon="@Icons.Material.Filled.MoreVert"
-                       Color="Color.Default"
-                       Size="Size.Medium"
-                       OnClick="@this.AbrirMenuMovil" />
-    </MudHidden>
-</MudAppBar>
-
 <!-- Contenido principal con grid masonry -->
 <div class="contenedor-masonry">
     <div class="pinterest-masonry">
