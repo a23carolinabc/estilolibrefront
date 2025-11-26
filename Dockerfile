@@ -19,6 +19,9 @@ WORKDIR /usr/share/nginx/html
 # Copiar archivos publicados de Blazor
 COPY --from=build /app/publish/wwwroot .
 
+# Reemplazar appsettings.json con appsettings.Docker.json para Docker
+RUN rm -f appsettings.json && mv appsettings.Docker.json appsettings.json
+
 # Copiar configuración de Nginx
 COPY nginx.conf /etc/nginx/nginx.conf
 
