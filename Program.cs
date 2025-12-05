@@ -38,6 +38,7 @@ builder.Services.AddScoped<ServicioMensajeInfo>();
 builder.Services.AddScoped<ServicioLogIn>();
 builder.Services.AddScoped<ServicioAutentificacion>();
 builder.Services.AddScoped<ServicioUsuarios>();
+builder.Services.AddScoped<ServicioPrendas>();
 builder.Services.AddSingleton<ServicioDatosContexto>();
 builder.Services.AddScoped<AuthenticationStateProvider>(sp => sp.GetRequiredService<ServicioAutentificacion>());
 builder.Services.AddAuthorizationCore(config =>

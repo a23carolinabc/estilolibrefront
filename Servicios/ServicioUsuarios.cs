@@ -25,13 +25,13 @@ namespace EstiloLibreFront.Servicios
 
         #region ***** MÉTODOS PÚBLICOS *****
                
-        public async Task<UsuarioDataRegistro?> AddNew()
+        public async Task<UsuarioData?> AddNew()
         {
-            UsuarioDataRegistro? usuarioDataDB;
+            UsuarioData? usuarioDataDB;
             HttpResponseMessage respuestaHttp;
             string strDatos;
 
-            usuarioDataDB = new UsuarioDataRegistro();
+            usuarioDataDB = new UsuarioData();
 
             //Enviar petición al servidor.
             respuestaHttp = await this._factoriaClientesHttp.CreateClient("API")
@@ -41,17 +41,17 @@ namespace EstiloLibreFront.Servicios
             strDatos = this.ProcesarRespuestaTexto<string>(respuestaHttp);
 
             //Deserializar y devolver respuesta.
-            usuarioDataDB = JsonSerializer.Deserialize<UsuarioDataRegistro>(strDatos, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            usuarioDataDB = JsonSerializer.Deserialize<UsuarioData>(strDatos, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
             return usuarioDataDB;
         }
 
-        public async Task<UsuarioDataRegistro?> ShowData(int iUsuarioId)
+        public async Task<UsuarioData?> ShowData(int iUsuarioId)
         {
-            UsuarioDataRegistro? usuarioDataDB;
+            UsuarioData? usuarioDataDB;
             HttpResponseMessage respuestaHttp;
             string strDatos;
 
-            usuarioDataDB = new UsuarioDataRegistro();
+            usuarioDataDB = new UsuarioData();
 
             //Enviar petición al servidor.
             respuestaHttp = await this._factoriaClientesHttp.CreateClient("API")
@@ -61,7 +61,7 @@ namespace EstiloLibreFront.Servicios
             strDatos = this.ProcesarRespuestaTexto<string>(respuestaHttp);
 
             //Deserializar y devolver respuesta.
-            usuarioDataDB = JsonSerializer.Deserialize<UsuarioDataRegistro>(strDatos, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            usuarioDataDB = JsonSerializer.Deserialize<UsuarioData>(strDatos, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
             return usuarioDataDB;
         }
 

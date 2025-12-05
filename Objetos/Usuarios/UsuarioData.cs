@@ -2,7 +2,7 @@
 
 namespace EstiloLibreFront.Objetos.Usuarios
 {
-    public partial class UsuarioDataRegistro
+    public partial class UsuarioData
     {
         public Dtos.UsuarioDTO? Usuario { get; set; }
         public int? iUsuarioAnteriorId { get; set; }

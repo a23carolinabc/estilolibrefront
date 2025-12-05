@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EstiloLibreFront.Objetos.Usuarios
 {
-    public partial class UsuarioDataRegistro
+    public partial class UsuarioData
     {
         public class Dtos
         {

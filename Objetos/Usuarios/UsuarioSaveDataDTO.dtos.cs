@@ -17,7 +17,7 @@
                 public bool Activo { get; set; }
 
                 public UsuarioDTO() { }
-                public UsuarioDTO(UsuarioDataRegistro.Dtos.UsuarioDTO usuarioDTO)
+                public UsuarioDTO(UsuarioData.Dtos.UsuarioDTO usuarioDTO)
                 {
                     this.Id = usuarioDTO.Id;
                     this.Login = usuarioDTO.Login;
