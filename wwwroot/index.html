@@ -31,84 +31,44 @@
     <!-- Cargar MudBlazor JS -->
     <script src="_content/MudBlazor/MudBlazor.min.js?v=8.14"></script>
 
-    <!-- Cargar la librería de background removal como script global -->
-    <script src="/background-removal.js"></script>
+    <script type="module">
+        import * as backgroundRemoval from 'https://unpkg.com/@imgly/background-removal@1.7.0/dist/index.mjs';
 
-    <!-- Nuestra implementación -->
-    <script>
-        (function () {
-            // Esperar a que se cargue todo
-            document.addEventListener('DOMContentLoaded', function () {
-                console.log('Configurando removeImageBackground...');
+        window.removeImageBackground = async function (imageDataUrl) {
+            try {
+                console.log('Iniciando eliminación de fondo...');
 
-                // La librería UMD/CommonJS generalmente expone una variable global
-                // Verifica en la consola qué variable se expone
+                if (!imageDataUrl) {
+                    throw new Error('No se proporcionó imagen');
+                }
 
-                window.removeImageBackground = async function (imageDataUrl) {
-                    try {
-                        console.log('Iniciando eliminación de fondo...');
+                // Convertir dataURL a Blob
+                const response = await fetch(imageDataUrl);
+                const blob = await response.blob();
 
-                        if (!imageDataUrl) {
-                            throw new Error('No se proporcionó imagen');
-                        }
-
-                        // Buscar la función en diferentes lugares donde pueda estar
-                        let removeBackground = null;
-
-                        // Opción 1: Buscar en global window
-                        if (window.removeBackground) {
-                            removeBackground = window.removeBackground;
-                        }
-                        // Opción 2: Buscar en window.backgroundRemoval
-                        else if (window.backgroundRemoval && window.backgroundRemoval.removeBackground) {
-                            removeBackground = window.backgroundRemoval.removeBackground;
-                        }
-                        // Opción 3: Buscar en window.imgly
-                        else if (window.imgly && window.imgly.removeBackground) {
-                            removeBackground = window.imgly.removeBackground;
-                        }
-                        // Opción 4: Buscar en window.BackgroundRemoval
-                        else if (window.BackgroundRemoval) {
-                            removeBackground = window.BackgroundRemoval;
-                        }
-                        // Opción 5: La librería se auto-ejecuta y expone algo
-                        else {
-                            // Verificar qué se cargó
-                            console.log('Variables globales disponibles:', Object.keys(window).filter(k =>
-                                k.includes('background') ||
-                                k.includes('imgly') ||
-                                k.includes('remove')
-                            ));
-
-                            throw new Error('No se encontró la función removeBackground');
-                        }
-
-                        console.log('Función encontrada, procesando imagen...');
-
-                        // Convertir dataURL a Blob
-                        const response = await fetch(imageDataUrl);
-                        const blob = await response.blob();
-
-                        // Llamar a la función
-                        const resultBlob = await removeBackground(blob);
-
-                        // Convertir resultado a dataURL
-                        return await new Promise((resolve, reject) => {
-                            const reader = new FileReader();
-                            reader.onloadend = () => resolve(reader.result);
-                            reader.onerror = reject;
-                            reader.readAsDataURL(resultBlob);
-                        });
-
-                    } catch (err) {
-                        console.error('Error en removeImageBackground:', err);
-                        throw err;
+                // Llamar a removeBackground
+                const resultBlob = await backgroundRemoval.removeBackground(blob, {
+                    debug: true,
+                    progress: (key, current, total) => {
+                        console.log(`Progreso ${key}: ${current}/${total}`);
                     }
-                };
+                });
 
-                console.log('✓ removeImageBackground configurado');
-            });
-        })();
+                // Convertir resultado a dataURL
+                return await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(resultBlob);
+                });
+
+            } catch (err) {
+                console.error('Error en removeImageBackground:', err);
+                throw err;
+            }
+        };
+
+        console.log('✓ removeImageBackground configurado con módulo ES6');
     </script>
 
     <!-- Utils.js si existe -->
