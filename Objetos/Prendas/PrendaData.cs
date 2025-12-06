@@ -4,7 +4,7 @@ namespace EstiloLibreFront.Objetos.Prendas
 {
     public class PrendaData
     {
-        public PrendaDTO Prenda { get; set; }
+        public PrendaDTO Prenda { get; set; } = new PrendaDTO();
         public List<ControlItem> Estaciones { get; set; }
         public List<ControlItem> Marcas { get; set; }
         public List<ControlItem> Materiales { get; set; }

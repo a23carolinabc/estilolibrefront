@@ -9,9 +9,9 @@ namespace EstiloLibreFront.Servicios
     public class ServicioPrendas : ServicioBase
     {
         #region ***** PROPIEDADES *****
-        private string _urlSaveData = "Prendas/savedata";
+        private string _urlSaveData = "api/Prendas/savedata";
         private string _urlShowData = "Prendas/showdata/";
-        private string _urlAddNew = "Prendas/addnew";
+        private string _urlAddNew = "api/Prendas/addnew";
         private string _urlDelete = "Prendas/delete/";
         #endregion
 
@@ -45,7 +45,26 @@ namespace EstiloLibreFront.Servicios
             prendaData = JsonSerializer.Deserialize<PrendaData>(strDatos, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
             return prendaData;
         }
-        
+
+        public async Task<int> SaveData(PrendaDTO prenda)
+        {
+            JsonElement datos;
+            HttpResponseMessage respuestaHttp;
+            int prendaId;
+
+            //Serializar a json.
+            datos = JsonSerializer.SerializeToElement<PrendaDTO>(prenda);
+
+            //Enviar petición al servidor.
+            respuestaHttp = await this._factoriaClientesHttp.CreateClient("API")
+                .PostAsJsonAsync(this._urlSaveData, datos);
+
+            //Comprobar status 200.
+            prendaId = this.ProcesarRespuestaTexto<int>(respuestaHttp);
+
+            //Devolver ID de la prenda creada.
+            return prendaId;
+        }
         #endregion
     }
 }
