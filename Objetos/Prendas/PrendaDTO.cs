@@ -6,7 +6,6 @@ namespace EstiloLibreFront.Objetos.Prendas
     public class PrendaDTO
     {
         public int Id { get; set; }
-        public string RutaFoto { get; set; }
 
         [IdObligatorio]
         public int ColorId { get; set; }
@@ -33,7 +32,6 @@ namespace EstiloLibreFront.Objetos.Prendas
         public DateTime? FechaCompra { get; set; }
 
         [CampoObligatorio]
-        public string FotoBase64 { get; set; } = string.Empty;
-    
-}
+        public string FotoBase64 { get; set; } = string.Empty;    
+    }
 }
