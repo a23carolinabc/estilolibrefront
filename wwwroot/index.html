@@ -32,7 +32,8 @@
     <script src="_content/MudBlazor/MudBlazor.min.js?v=8.14"></script>
 
     <script type="module">
-        import * as backgroundRemoval from 'https://unpkg.com/@imgly/background-removal@1.7.0/dist/index.mjs';
+        // Usar esm.sh en lugar de unpkg - resuelve dependencias automáticamente
+        import * as backgroundRemoval from 'https://esm.sh/@imgly/background-removal@1.7.0';
 
         window.removeImageBackground = async function (imageDataUrl) {
             try {
@@ -46,11 +47,13 @@
                 const response = await fetch(imageDataUrl);
                 const blob = await response.blob();
 
-                // Llamar a removeBackground
+                // Llamar a removeBackground con modelo pequeño
                 const resultBlob = await backgroundRemoval.removeBackground(blob, {
+                    model: 'small',  // Modelo pequeño (~25 MB) - más rápido
                     debug: true,
                     progress: (key, current, total) => {
-                        console.log(`Progreso ${key}: ${current}/${total}`);
+                        const porcentaje = Math.round((current / total) * 100);
+                        console.log(`Progreso ${key}: ${porcentaje}%`);
                     }
                 });
 

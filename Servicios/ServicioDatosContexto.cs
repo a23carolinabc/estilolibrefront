@@ -153,6 +153,11 @@ public class ServicioDatosContexto
         return strNombre + " " + strApellidos;
     }
 
+    public string GetLoginUsuario()
+    {
+        return this._datosContexto?.TokenDecodificado?.GetLoginUsuario() ?? "";
+    }
+
     #endregion
 
     #region ***** MÉTODOS PRIVADOS *****

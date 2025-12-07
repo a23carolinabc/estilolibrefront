@@ -294,6 +294,8 @@
 </MudContainer>
 
 @code {
+    [Inject]
+    private ServicioDatosContexto _servicioDatosContexto { get; set; }
     // ============================================
     // PROPIEDADES PRIVADAS
     // ============================================
@@ -374,7 +376,7 @@
 
             // 2. LLAMAR A JAVASCRIPT PARA ELIMINAR FONDO
             // Usar InvokeAsync con timeout para evitar bloqueos
-            var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(60)); // 60 segundos timeout
+            var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(300)); // 60 segundos timeout
 
             string imagenSinFondoBase64;
             try
