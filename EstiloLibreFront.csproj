@@ -71,6 +71,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>TrGeneral.resx</DependentUpon>
     </Compile>
+    <Compile Update="Traducciones\TrPrendas\TrPrendas.Designer.cs">
+      <DependentUpon>TrPrendas.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
     <Compile Update="Traducciones\TrMenu\TrMenu.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -90,6 +95,10 @@
     <EmbeddedResource Update="Traducciones\TrGeneral\TrGeneral.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>TrGeneral.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Traducciones\TrPrendas\TrPrendas.resx">
+      <LastGenOutput>TrPrendas.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Traducciones\TrMenu\TrMenu.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

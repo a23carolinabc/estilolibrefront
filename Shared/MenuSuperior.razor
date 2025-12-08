@@ -1,62 +1,93 @@
-﻿<MudIconButton Icon="@Icons.Custom.Brands.MudBlazor"
-               Color="Color.Default"
-               Edge="Edge.Start"
-               Href="/"
-               Size="Size.Large" />
+﻿<MudAppBar Elevation="0" Dense="false" Color="Color.Tertiary" Class="appbar-principal" Style="border-bottom:1px solid grey;">
+    <MudTextField @bind-Value="this._strBusqueda"
+                  Placeholder="Buscar"
+                  Adornment="Adornment.Start"
+                  AdornmentIcon="@Icons.Material.Filled.Search"
+                  Variant="Variant.Outlined"
+                  Margin="Margin.Dense"
+                  Class="mx-4 search-field"
+                  AdornmentColor="Color.Primary"
+                  FullWidth="false" />
+    <MudSpacer />
 
-<MudTextField @bind-Value="this._searchText"
-              Placeholder="Buscar"
-              Adornment="Adornment.Start"
-              AdornmentIcon="@Icons.Material.Filled.Search"
-              Variant="Variant.Outlined"
-              Margin="Margin.Dense"
-              Class="mx-4 search-field"
-              FullWidth="false" />
+    <!-- DISPOSITIVOS PEQUEÑOS -->
+    <MudHidden Breakpoint="Breakpoint.MdAndUp">
+        <MudMenu Dense
+                 Variant="Variant.Text"
+                 Size="Size.Medium"
+                 Color="Color.Dark"
+                 Icon="@Icons.Material.Filled.MoreVert">
 
-<MudSpacer />
+            <MudMenu StartIcon="@Icons.Material.TwoTone.Settings"
+                     IconColor="Color.Primary"
+                     Label="Settings">
+                <MudMenuItem Icon="@Icons.Material.TwoTone.DarkMode"
+                             IconColor="Color.Secondary"
+                             Label="Dark Theme" />
+            </MudMenu>
 
-<MudHidden Breakpoint="Breakpoint.SmAndDown">
-    <MudIconButton Icon="@Icons.Material.Filled.Notifications"
-                   Color="Color.Default"
-                   Size="Size.Medium" />
-    <MudIconButton Icon="@Icons.Material.Filled.Message"
-                   Color="Color.Default"
-                   Size="Size.Medium" />
-    <MudAvatar Color="Color.Info" Size="Size.Medium">C</MudAvatar>
-    <MudIconButton Icon="@Icons.Material.Filled.KeyboardArrowDown"
-                   Color="Color.Default"
-                   Size="Size.Small" />
-</MudHidden>
+            <MudDivider />
 
-<MudHidden Breakpoint="Breakpoint.MdAndUp">
-    <MudIconButton Icon="@Icons.Material.Filled.MoreVert"
-                   Color="Color.Default"
-                   Size="Size.Medium"
-                   OnClick="@this.AbrirMenuMovil" />
-</MudHidden>
+            <MudMenuItem Href="/"
+                         ForceLoad
+                         Icon="@Icons.Material.TwoTone.Logout"
+                         IconColor="Color.Primary"
+                         Label="Sign Out" 
+                         OnClick="LogOut" />
+        </MudMenu>
+    </MudHidden>
+
+    <!-- DISPOSITIVOS GRANDES-->
+    <MudHidden Breakpoint="Breakpoint.SmAndDown">
+        <MudMenu Dense
+                 Variant="Variant.Text"
+                 Size="Size.Medium"
+                 Color="Color.Dark"
+                 Icon="@Icons.Material.TwoTone.SupervisedUserCircle">
+
+            <MudMenu StartIcon="@Icons.Material.TwoTone.Settings"
+                     IconColor="Color.Primary"
+                     Label="Settings">
+                <MudMenuItem Icon="@Icons.Material.TwoTone.DarkMode"
+                             IconColor="Color.Secondary"
+                             Label="Dark Theme" />
+            </MudMenu>
+
+            <MudDivider />
+
+            <MudMenuItem Href="/"
+                         ForceLoad
+                         Icon="@Icons.Material.TwoTone.Logout"
+                         IconColor="Color.Primary"
+                         Label="Sign Out" 
+                         OnClick="LogOut" />
+        </MudMenu>
+    </MudHidden>
+</MudAppBar>
 
 @code {
     #region ***** DEPENDENCIAS *****
+    [Inject]
+    public ServicioLogIn ServicioLogIn { get; set; }
+    [Inject]
+    public required IStringLocalizer<TrGeneral> Traductor { get; set; }
     #endregion
 
     #region ***** PARÁMETROS *****
     #endregion
 
     #region ***** PROPIEDADES PRIVADAS *****
-    private string _searchText = string.Empty;
-    #endregion
-
-    #region ***** MÉTODOS LIFECYCLE *****
+    private string _strBusqueda = string.Empty;
     #endregion
 
     #region ***** MÉTODOS PÚBLICOS *****
+
     #endregion
 
     #region ***** MÉTODOS PRIVADOS *****
-    private void AbrirMenuMovil()
+    private void LogOut()
     {
-        // Lógica para abrir menú en móvil
-        Console.WriteLine("Abrir menú móvil");
+        this.ServicioLogIn.LogOut();
     }
     #endregion
 }

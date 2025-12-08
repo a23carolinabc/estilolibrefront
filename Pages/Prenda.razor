@@ -1,94 +1,90 @@
-﻿@page "/prendas/crear"
+﻿@using EstiloLibreFront.Objetos.Prendas
+@using EstiloLibreFront.Servicios 
+@page "/prendas/crear"
+@page "/"
 @layout MainLayout
-@using EstiloLibreFront.Objetos.Prendas
-@using EstiloLibreFront.Servicios
-@inject ServicioPrendas ServicioPrendas
-@inject IJSRuntime JSRuntime
-@inject NavigationManager NavigationManager
-@inject ISnackbar Snackbar
 
-<PageTitle>Crear Nueva Prenda</PageTitle>
+<PageTitle>@Traductor["PageTitle"]</PageTitle>
 
-<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-4">
-    <MudText Typo="Typo.h4" Class="mb-4">
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-6">
+    <MudText Typo="Typo.h4" Class="mb-3">
         <MudIcon Icon="@Icons.Material.Filled.AddCircle" Class="mr-2" />
-        Crear Nueva Prenda
+        @Traductor["lblCrearNuevaPrenda"]
     </MudText>
 
-    @if (this._cargandoDatos)
+    @if (this._bCargandoDatos)
     {
-        <!-- Pantalla de carga inicial -->
+        <!-- PANTALLA CARGA INICIAL -->
         <MudPaper Class="pa-4 text-center">
             <MudProgressCircular Indeterminate="true" Size="Size.Large" />
-            <MudText Class="mt-2">Cargando formulario...</MudText>
+            <MudText Class="mt-2">@Traductor["lblCargandoDatos"]</MudText>
         </MudPaper>
     }
     else if (this._prendaData == null)
     {
-        <!-- Error al cargar datos -->
-        <MudAlert Severity="Severity.Error">
-            Error al cargar los datos del formulario. Por favor, intenta recargar la página.
-        </MudAlert>
+        <!-- ERROR AL CARGAR DATOS -->
+        <MudAlert Severity="Severity.Error">@TraductorErrores["ERR_CargaDatosIniciales"]</MudAlert>
     }
     else
     {
-        <EditForm Model="@(this._prendaData?.Prenda ?? new PrendaDTO())" OnValidSubmit="this.GuardarPrenda">
+        <EditForm Model="@this._prenda" OnValidSubmit="this.GuardarPrenda">
             <DataAnnotationsValidator />
 
-            <!-- ============================================ -->
-            <!-- SECCIÓN 1: IMAGEN DE LA PRENDA             -->
-            <!-- ============================================ -->
+            <!-- SELECCIÓN DE LA IMAGEN -->
             <MudCard Class="mb-4">
                 <MudCardHeader>
                     <CardHeaderContent>
                         <MudText Typo="Typo.h6">
                             <MudIcon Icon="@Icons.Material.Filled.Image" Class="mr-2" />
-                            Foto de la Prenda
+                            @Traductor["lblFotoPrenda"]
                         </MudText>
                     </CardHeaderContent>
                 </MudCardHeader>
                 <MudCardContent>
 
-                    <InputFile id="fileInput"
+                    @* <InputFile id="fileInput"
                                OnChange="this.CargarImagen"
                                accept="image/*"
-                               class="d-none" />
+                               class="d-none" /> *@
 
-                    @if (this._procesandoImagen)
+                    @if (this._bProcesandoImagen)
                     {
-                        <!-- Mostrar mientras se elimina el fondo -->
+                        <!-- CÍRCULO DE CARGAR MIENTRAS SE PROCESA LA IMAGEN -->
                         <div class="text-center pa-4">
                             <MudProgressCircular Indeterminate="true" Size="Size.Large" Color="Color.Primary" />
                             <MudText Typo="Typo.body1" Class="mt-2">
-                                Eliminando fondo de la imagen con IA...
+                                @Traductor["lblEsperaEliminacionFondo"]
                             </MudText>
                             <MudText Typo="Typo.body2" Color="Color.Secondary">
-                                Esto puede tardar unos segundos la primera vez
+                                @Traductor["lblAvisoEspera"]
                             </MudText>
                         </div>
                     }
                     else
                     {
-                        <!-- Botón para seleccionar imagen -->
+                        <!-- INPUT SELECCIÓN DE IMAGEN -->
                         <InputFile id="fileInput"
                                    OnChange="this.CargarImagen"
                                    accept="image/*"
                                    class="d-none" />
 
+                        <!-- BOTÓN SELECCIÓN DE IMAGEN -->
                         <MudButton HtmlTag="label"
                                    Variant="Variant.Filled"
                                    Color="Color.Primary"
                                    StartIcon="@Icons.Material.Filled.CloudUpload"
                                    for="fileInput"
                                    FullWidth="true">
-                            @(string.IsNullOrEmpty(this._imagenPreview) ? "Seleccionar Imagen" : "Cambiar Imagen")
+                            @(string.IsNullOrEmpty(this._strImagenPreview) 
+                                                    ? Traductor["btnSeleccionarImagen"] 
+                                                    : Traductor["btnCambiarImagen"])
                         </MudButton>
 
                         <!-- Preview de la imagen -->
-                        @if (!string.IsNullOrEmpty(this._imagenPreview))
+                        @if (!string.IsNullOrEmpty(this._strImagenPreview))
                         {
                             <MudPaper Class="mt-4 pa-2 text-center" Style="background-color: #f5f5f5;">
-                                <MudImage Src="@this._imagenPreview"
+                                <MudImage Src="@this._strImagenPreview"
                                           Alt="Vista previa"
                                           Style="max-width: 100%; max-height: 400px; border: 2px solid #ddd; border-radius: 8px;" />
                                 <MudText Typo="Typo.caption" Class="mt-2" Color="Color.Success">
@@ -107,9 +103,7 @@
                 </MudCardContent>
             </MudCard>
 
-            <!-- ============================================ -->
-            <!-- SECCIÓN 2: INFORMACIÓN BÁSICA              -->
-            <!-- ============================================ -->
+            <!-- INFORMACIÓN BÁSICA -->
             <MudCard Class="mb-4">
                 <MudCardHeader>
                     <CardHeaderContent>
@@ -122,7 +116,7 @@
                 <MudCardContent>
 
                     <!-- Color -->
-                    <MudSelect @bind-Value="this._prendaData.Prenda.ColorId"
+                    <MudSelect @bind-Value="this._prenda.ColorId"
                                Label="Color *"
                                Variant="Variant.Outlined"
                                Class="mb-3"
@@ -138,7 +132,7 @@
                     </MudSelect>
 
                     <!-- Categoría -->
-                    <MudSelect @bind-Value="this._prendaData.Prenda.CategoriaId"
+                    <MudSelect @bind-Value="this._prenda.CategoriaId"
                                Label="Categoría *"
                                Variant="Variant.Outlined"
                                Class="mb-3"
@@ -154,7 +148,7 @@
                     </MudSelect>
 
                     <!-- Talla -->
-                    <MudSelect @bind-Value="this._prendaData.Prenda.TallaId"
+                    <MudSelect @bind-Value="this._prenda.TallaId"
                                Label="Talla *"
                                Variant="Variant.Outlined"
                                Class="mb-3"
@@ -170,7 +164,7 @@
                     </MudSelect>
 
                     <!-- Estado -->
-                    <MudSelect @bind-Value="this._prendaData.Prenda.EstadoId"
+                    <MudSelect @bind-Value="this._prenda.EstadoId"
                                Label="Estado *"
                                Variant="Variant.Outlined"
                                Class="mb-3"
@@ -186,7 +180,7 @@
                     </MudSelect>
 
                     <!-- Material -->
-                    <MudSelect @bind-Value="this._prendaData.Prenda.MaterialId"
+                    <MudSelect @bind-Value="this._prenda.MaterialId"
                                Label="Material *"
                                Variant="Variant.Outlined"
                                Class="mb-3"
@@ -204,9 +198,7 @@
                 </MudCardContent>
             </MudCard>
 
-            <!-- ============================================ -->
-            <!-- SECCIÓN 3: INFORMACIÓN ADICIONAL (OPCIONAL) -->
-            <!-- ============================================ -->
+            <!-- INFORMACIÓN ADICIONAL (OPCIONAL) -->
             <MudCard Class="mb-4">
                 <MudCardHeader>
                     <CardHeaderContent>
@@ -219,64 +211,62 @@
                 <MudCardContent>
 
                     <!-- Marca -->
-                    <MudSelect @bind-Value="this._prendaData.Prenda.MarcaId"
+                    <MudSelect T="int?" @bind-Value="this._prenda.MarcaId"
                                Label="Marca (Opcional)"
                                Variant="Variant.Outlined"
                                Class="mb-3">
-                        <MudSelectItem Value="0">Sin marca</MudSelectItem>
+                        <MudSelectItem T="int?" Value="null">Sin marca</MudSelectItem>
                         @if (this._prendaData.Marcas != null)
                         {
                             @foreach (var marca in this._prendaData.Marcas)
                             {
-                                <MudSelectItem Value="@marca.Id">@marca.Nombre</MudSelectItem>
+                                <MudSelectItem T="int?" Value="@marca.Id">@marca.Nombre</MudSelectItem>
                             }
                         }
                     </MudSelect>
 
                     <!-- Estación -->
-                    <MudSelect @bind-Value="this._prendaData.Prenda.EstacionId"
+                    <MudSelect T="int?" @bind-Value="this._prenda.EstacionId"
                                Label="Estación (Opcional)"
                                Variant="Variant.Outlined"
                                Class="mb-3">
-                        <MudSelectItem Value="0">Todas las estaciones</MudSelectItem>
+                        <MudSelectItem T="int?" Value="null">Sin estacion</MudSelectItem>
                         @if (this._prendaData.Estaciones != null)
                         {
                             @foreach (var estacion in this._prendaData.Estaciones)
                             {
-                                <MudSelectItem Value="@estacion.Id">@estacion.Nombre</MudSelectItem>
+                                <MudSelectItem T="int?" Value="@estacion.Id">@estacion.Nombre</MudSelectItem>
                             }
                         }
                     </MudSelect>
 
                     <!-- Precio -->
-                    <MudNumericField @bind-Value="this._prendaData.Prenda.Precio"
+                    <MudNumericField @bind-Value="this._prenda.Precio"
                                      Label="Precio (€)"
                                      Variant="Variant.Outlined"
                                      Min="0"
                                      Class="mb-3" />
 
                     <!-- Enlace de Compra -->
-                    <MudTextField @bind-Value="this._prendaData.Prenda.EnlaceCompra"
+                    <MudTextField @bind-Value="this._prenda.EnlaceCompra"
                                   Label="Enlace de Compra (URL)"
                                   Variant="Variant.Outlined"
                                   Class="mb-3" />
 
                     <!-- Fecha de Compra -->
-                    <MudDatePicker @bind-Date="this._fechaCompra"
+                    <MudDatePicker @bind-Date="this._prenda.FechaCompra"
                                    Label="Fecha de Compra"
                                    Variant="Variant.Outlined" />
 
                 </MudCardContent>
             </MudCard>
 
-            <!-- ============================================ -->
-            <!-- BOTONES DE ACCIÓN                          -->
-            <!-- ============================================ -->
+            <!-- BOTONES DE ACCIÓN -->
             <MudStack Row="true" Justify="Justify.SpaceBetween" Class="mt-4">
                 <MudButton Variant="Variant.Outlined"
                            Color="Color.Default"
                            StartIcon="@Icons.Material.Filled.ArrowBack"
-                           OnClick="@(() => this.NavigationManager.NavigateTo("/"))">
+                           OnClick="@(() => this.ServicioNavegacion.NavegarA("/"))">
                     Cancelar
                 </MudButton>
 
@@ -284,8 +274,8 @@
                            Variant="Variant.Filled"
                            Color="Color.Primary"
                            StartIcon="@Icons.Material.Filled.Save"
-                           Disabled="@(this._guardando || string.IsNullOrEmpty(this._imagenPreview))">
-                    @(this._guardando ? "Guardando..." : "Guardar Prenda")
+                           Disabled="@(this._bGuardando || string.IsNullOrEmpty(this._strImagenPreview))">
+                    @(this._bGuardando ? "Guardando..." : "Guardar Prenda")
                 </MudButton>
             </MudStack>
 
@@ -294,207 +284,203 @@
 </MudContainer>
 
 @code {
-    [Inject]
-    private ServicioDatosContexto _servicioDatosContexto { get; set; }
-    // ============================================
-    // PROPIEDADES PRIVADAS
-    // ============================================
-    private PrendaData? _prendaData = null;
-    private string _imagenPreview = string.Empty;
-    private DateTime? _fechaCompra;
-    private bool _cargandoDatos = true;
-    private bool _procesandoImagen = false;
-    private bool _guardando = false;
 
-    // ============================================
-    // INICIALIZACIÓN DEL COMPONENTE
-    // ============================================
+    #region ***** INYECCIONES *****
+    [Inject]
+    public required ServicioDatosContexto ServicioDatosContexto { get; set; }
+    [Inject]
+    public required ServicioPrendas ServicioPrendas { get; set; }
+    [Inject]
+    public required ServicioNavegacion ServicioNavegacion { get; set; }
+    [Inject]
+    public required ISnackbar ServicioNotificacion { get; set; }
+    [Inject]
+    public required IJSRuntime ServicioJS { get; set; }
+    [Inject]
+    public required IStringLocalizer<TrErrores> TraductorErrores { get; set; }
+    [Inject]
+    public required IStringLocalizer<TrPrendas> Traductor { get; set; }
+    #endregion
+
+    #region ***** PROPIEDADES PRIVADAS *****
+
+    private PrendaData? _prendaData = null;
+    private PrendaDTO _prenda = new();
+    private string _strImagenPreview = string.Empty;
+    private bool _bCargandoDatos = true;
+    private bool _bProcesandoImagen = false;
+    private bool _bGuardando = false;
+
+    #endregion
+
+    #region ***** MÉTODOS PÚBLICOS *****
+
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            this._cargandoDatos = true;
+            // Notificamos la carga de datos.
+            this._bCargandoDatos = true;
 
-            // Cargar datos necesarios para el formulario
+            // Cargar datos necesarios para el formulario,
             this._prendaData = await this.ServicioPrendas.AddNew();
-
-            // Verificar que se cargaron los datos
             if (this._prendaData == null)
             {
-                this.Snackbar.Add("Error: No se pudieron cargar los datos del formulario", Severity.Error);
+                this.ServicioNotificacion.Add(this.TraductorErrores["ERR_CargaDatosIniciales"], Severity.Error);
+            }
+            else
+            {
+                this._prenda = this._prendaData.Prenda?? new();
             }
         }
         catch (Exception ex)
         {
-            this.Snackbar.Add($"Error al cargar datos: {ex.Message}", Severity.Error);
-            Console.WriteLine($"Error completo: {ex}");
             this._prendaData = null;
+            this.ServicioNotificacion.Add(this.TraductorErrores["ERR_CargaDatosIniciales"], Severity.Error);
+            Console.WriteLine($"Error completo: {ex}");            
         }
         finally
         {
-            this._cargandoDatos = false;
+            this._bCargandoDatos = false;
         }
     }
 
-    // ============================================
-    // MÉTODO: CARGAR Y PROCESAR IMAGEN
-    // ============================================
+    #endregion
+
+    #region ***** MÉTODOS PRIVADOS *****
+
     private async Task CargarImagen(InputFileChangeEventArgs e)
     {
+        IBrowserFile archivo;
+        byte[] imagenBytes;
+        string imagenBase64;
+        string imagenFinalBase64;
+        CancellationTokenSource tokenTiempoCancelacionMetodo;
+
         try
         {
-            // Activar indicador de procesamiento
-            this._procesandoImagen = true;
+            //Indicar espera al usuario.
+            this._bProcesandoImagen = true;
             StateHasChanged();
 
-            var archivo = e.File;
+            archivo = e.File;
 
-            // Validar tamaño (máximo 10MB)
+            // Validar tamaño (máximo 10MB).
             if (archivo.Size > 10 * 1024 * 1024)
             {
-                this.Snackbar.Add("La imagen es demasiado grande. Máximo 10MB.", Severity.Warning);
-                this._procesandoImagen = false;
+                this.ServicioNotificacion.Add(this.TraductorErrores["ERR_ImagenDemasiadoGrande"], Severity.Warning);
+                this._bProcesandoImagen = false;
                 StateHasChanged();
                 return;
             }
 
-            this.Snackbar.Add("Procesando imagen...", Severity.Info);
+            this.ServicioNotificacion.Add(this.Traductor["NTF_ProcesandoImagen"], Severity.Info);
 
-            // 1. Leer imagen completamente antes de liberar el stream
-            byte[] imageBytes;
+            // Leer imagen y pasar a bytes[].           
             using (var stream = archivo.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024))
             using (var ms = new MemoryStream())
             {
                 await stream.CopyToAsync(ms);
-                imageBytes = ms.ToArray();
+                imagenBytes = ms.ToArray();
             }
 
-            // Convertir a base64 inmediatamente para liberar recursos
-            var imagenOriginalBase64 = $"data:{archivo.ContentType};base64,{Convert.ToBase64String(imageBytes)}";
+            // Convertir a base64.
+            imagenBase64 = $"data:{archivo.ContentType};base64,{Convert.ToBase64String(imagenBytes)}";
 
-            Console.WriteLine("Imagen cargada, iniciando eliminación de fondo...");
+            // Definir tiempo máximo de procesamiento.
+            tokenTiempoCancelacionMetodo = new CancellationTokenSource(TimeSpan.FromSeconds(300)); // 60 segundos timeout
 
-            // 2. LLAMAR A JAVASCRIPT PARA ELIMINAR FONDO
-            // Usar InvokeAsync con timeout para evitar bloqueos
-            var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(300)); // 60 segundos timeout
-
-            string imagenSinFondoBase64;
-            try
-            {
-                imagenSinFondoBase64 = await this.JSRuntime.InvokeAsync<string>(
-                    "removeImageBackground",
-                    cancellationTokenSource.Token,
-                    imagenOriginalBase64
+            // Usar función js para eliminar el fondo.
+            imagenFinalBase64 = await this.ServicioJS.InvokeAsync<string>(
+                    "eliminarFondo",
+                    tokenTiempoCancelacionMetodo.Token,
+                    imagenBase64
                 );
-            }
-            catch (TaskCanceledException)
+
+            // Guardar resultado,
+            if (!string.IsNullOrEmpty(imagenFinalBase64))
             {
-                this.Snackbar.Add("Tiempo de espera agotado al procesar la imagen", Severity.Error);
-                this._procesandoImagen = false;
-                StateHasChanged();
-                return;
-            }
+                // Para preview.
+                this._strImagenPreview = imagenFinalBase64;
 
-            Console.WriteLine("Fondo eliminado correctamente");
+                // Para enviar al servidor.
+                this._prenda.FotoBase64 = imagenFinalBase64.Contains(",") ? imagenFinalBase64.Split(',')[1] : imagenFinalBase64;
 
-            // 3. GUARDAR RESULTADO
-            if (!string.IsNullOrEmpty(imagenSinFondoBase64))
-            {
-                // Para preview
-                this._imagenPreview = imagenSinFondoBase64;
-
-                // Para enviar al servidor
-                if (imagenSinFondoBase64.Contains(","))
-                {
-                    this._prendaData.Prenda.FotoBase64 = imagenSinFondoBase64.Split(',')[1];
-                }
-                else
-                {
-                    this._prendaData.Prenda.FotoBase64 = imagenSinFondoBase64;
-                }
-
-                this.Snackbar.Add("✓ Fondo eliminado correctamente", Severity.Success);
+                //Notificar al usuario.
+                this.ServicioNotificacion.Add(this.Traductor["NTF_FondoEliminadoCorrectamente"], Severity.Success);
             }
             else
             {
-                throw new Exception("No se recibió resultado del procesamiento");
+                this.ServicioNotificacion.Add(this.TraductorErrores["ERR_FondoNoEliminado"], Severity.Success);
+                throw new Exception(this.TraductorErrores["ERR_FondoNoEliminado"]);
             }
         }
         catch (Exception ex)
         {
-            this.Snackbar.Add($"Error al procesar imagen: {ex.Message}", Severity.Error);
+            this.ServicioNotificacion.Add(this.TraductorErrores["ERR_EliminarFondo"], Severity.Error);
             Console.WriteLine($"Error detallado: {ex}");
 
-            // Limpiar preview si hay error
-            this._imagenPreview = string.Empty;
-            if (this._prendaData?.Prenda != null)
-            {
-                this._prendaData.Prenda.FotoBase64 = string.Empty;
-            }
+            // Limpiar preview.
+            this._strImagenPreview = string.Empty;
+            this._prenda.FotoBase64 = string.Empty;
         }
         finally
         {
-            this._procesandoImagen = false;
+            this._bProcesandoImagen = false;
             StateHasChanged();
         }
     }
 
-    // ============================================
-    // MÉTODO: GUARDAR PRENDA
-    // ============================================
     private async Task GuardarPrenda()
     {
-        int prendaId;
+        int iPrendaId;
+        bool bFormValido;
 
         try
         {
-            this._guardando = true;
+            //Validar formulario.
+            bFormValido = this.Validar();
+            if (!bFormValido) return;
 
-            // Validar que hay imagen
-            if (string.IsNullOrEmpty(this._prendaData.Prenda.FotoBase64))
-            {
-                this.Snackbar.Add("Debe seleccionar una imagen", Severity.Warning);
-                return;
-            }
-
-            // Validar campos obligatorios
-            if (this._prendaData.Prenda.ColorId == 0 ||
-                this._prendaData.Prenda.CategoriaId == 0 ||
-                this._prendaData.Prenda.EstadoId == 0 ||
-                this._prendaData.Prenda.TallaId == 0 ||
-                this._prendaData.Prenda.MaterialId == 0)
-            {
-                this.Snackbar.Add("Complete todos los campos obligatorios (*)", Severity.Warning);
-                return;
-            }
-
-            // Convertir fecha si existe
-            if (this._fechaCompra.HasValue)
-            {
-                this._prendaData.Prenda.FechaCompra = this._fechaCompra.Value;
-            }
-
-            this.Snackbar.Add("Guardando prenda...", Severity.Info);
+            //Notificar al usuario.
+            this._bGuardando = true;
+            this.ServicioNotificacion.Add(this.Traductor["NTF_GuardandoPrenda"], Severity.Info);
 
             // Enviar al servidor
-            prendaId = await this.ServicioPrendas.SaveData(this._prendaData.Prenda);
+            iPrendaId = await this.ServicioPrendas.SaveData(this._prenda);
 
-            this.Snackbar.Add($"✓ Prenda guardada correctamente (ID: {prendaId})", Severity.Success);
-
-            // Esperar un momento para que el usuario vea el mensaje
-            await Task.Delay(1500);
-
-            // Navegar a inicio
-            this.NavigationManager.NavigateTo("/");
+            //Notificar al usuario el guardado.
+            this.ServicioNotificacion.Add(this.Traductor["NTF_PrendaGuardada"], Severity.Success);            
         }
         catch (Exception ex)
         {
-            this.Snackbar.Add($"Error al guardar: {ex.Message}", Severity.Error);
+            this.ServicioNotificacion.Add(this.TraductorErrores["ERR_Guardado"], Severity.Error);
             Console.WriteLine($"Error detallado: {ex}");
         }
         finally
         {
-            this._guardando = false;
+            this._bGuardando = false;
         }
     }
+
+    private bool Validar()
+    {
+        if (string.IsNullOrEmpty(this._prenda.FotoBase64))
+        {
+            this.ServicioNotificacion.Add(this.TraductorErrores["ERR_AvisoSubirImagen"], Severity.Warning);
+            return false;
+        }
+        if (this._prenda.ColorId <= 0 ||
+                this._prenda.CategoriaId <= 0 ||
+                this._prenda.EstadoId <= 0 ||
+                this._prenda.TallaId <= 0 ||
+                this._prenda.MaterialId <= 0)
+        {
+            this.ServicioNotificacion.Add(this.TraductorErrores["ERR_RellenarCamposObligatorios"], Severity.Warning);
+            return false;
+        }
+        return true;
+    }
+
+    #endregion
 }

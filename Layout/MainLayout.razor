@@ -1,30 +1,20 @@
 ﻿@inherits LayoutComponentBase
 
-@* Required *@
-<MudThemeProvider />
+<MudThemeProvider Theme="this._temaPersonalizado" />
 <MudPopoverProvider />
-@* Needed for dialogs *@
 <MudDialogProvider />
-@* Needed for snackbars *@
 <MudSnackbarProvider />
 
 <MudLayout>
-    <MudDrawer Open="true" Elevation="0" Variant="@DrawerVariant.Persistent"
-               Class="mud-theme-success" ClipMode="DrawerClipMode.Never">
-        <MenuLateral />
-    </MudDrawer>
+    <MenuLateral />
     
     <!-- Contenido principal sin padding adicional -->
-    <MudMainContent Class="main-content-custom">
-        <MudAppBar Elevation="1" Dense="false" Class="appbar-principal">
-            <MenuSuperior />
-        </MudAppBar>
+    <MudMainContent>
+        <MenuSuperior />
 
-        <div class="page-content-container">
-            <CascadingValue Value="this">
-                @Body
-            </CascadingValue>
-        </div>
+        <CascadingValue Value="this">
+            @Body
+        </CascadingValue>
     </MudMainContent>
 </MudLayout>
 
@@ -32,29 +22,32 @@
     #region ***** DEPENDENCIAS *****
     #endregion
 
-    #region ***** PARÁMETROS *****
+    #region ***** PROPIEDADES PRIVADAS *****
+    private MudTheme _temaPersonalizado = new MudTheme()
+    {
+        PaletteLight = new PaletteLight()
+        {
+            Primary = "#1E88E5",
+            Secondary = "#9C27B0",
+            Tertiary = "#FFFFFF",
+            Success = "#4CAF50",
+            Info = "#00BCD4",
+            Warning = "#FFC107",
+            Error = "#F44336",
+            Dark = "#424242",           
+        }
+    };
     #endregion
 
     #region ***** PROPIEDADES PÚBLICAS *****
 
-    public string TituloCabecera { get; private set; } = string.Empty;
-
     #endregion
 
     #region ***** MÉTODOS PÚBLICOS *****
-
-    /// <summary>
-    /// Actualiza el título de la cabecera y refresca la interfaz.
-    /// </summary>
-    /// <param name="strTitulo">Nuevo título a mostrar</param>
-    public void CambiarTituloCabecera(string strTitulo)
-    {
-        this.TituloCabecera = strTitulo ?? string.Empty;
-        this.StateHasChanged();
-    }
-
+        
     #endregion
 
     #region ***** MÉTODOS PRIVADOS *****
+
     #endregion
 }

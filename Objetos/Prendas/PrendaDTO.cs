@@ -22,10 +22,10 @@ namespace EstiloLibreFront.Objetos.Prendas
         [IdObligatorio]
         public int MaterialId { get; set; }
 
-        public int MarcaId { get; set; }
-        public int EstacionId { get; set; }
+        public int? MarcaId { get; set; }
+        public int? EstacionId { get; set; }
 
-        public decimal Precio { get; set; }
+        public decimal? Precio { get; set; }
 
         public string? EnlaceCompra { get; set; }
 

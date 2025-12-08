@@ -1,42 +1,7 @@
 ﻿@using System.Collections.Generic
-@page "/"
 @page "/menu"
 @layout MainLayout
-@inject IJSRuntime JSRuntime
-@implements IAsyncDisposable
 
-<!-- Contenido principal con grid masonry -->
-<div class="contenedor-masonry">
-    <div class="pinterest-masonry">
-        @foreach (var item in this._lstItems)
-        {
-            <MudCard Class="pinterest-card" @onclick="@(() => this.AbrirDetalle(item.Id))">
-                <MudCardMedia Image="@item.ImagenUrl" Height="@item.Altura" />
-                <MudCardContent Class="card-overlay">
-                    <div class="card-actions">
-                        <MudIconButton Icon="@Icons.Material.Filled.MoreHoriz"
-                                       Color="Color.Surface"
-                                       Size="Size.Small"
-                                       Class="btn-overlay" />
-                        <MudButton Variant="Variant.Filled"
-                                   Color="Color.Error"
-                                   Size="Size.Small"
-                                   Class="btn-guardar">
-                            Guardar
-                        </MudButton>
-                    </div>
-                </MudCardContent>
-            </MudCard>
-        }
-    </div>
-
-    @if (this._bCargando)
-    {
-        <div class="d-flex justify-center py-4">
-            <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
-        </div>
-    }
-</div>
 
 @code {
     #region ***** DEPENDENCIAS *****
@@ -46,110 +11,16 @@
     #endregion
 
     #region ***** PROPIEDADES PRIVADAS *****
-
-    private string _searchText = string.Empty;
-    private bool _bCargando = false;
-    private List<ItemPinterest> _lstItems = new();
-    private Random _random = new();
-    private DotNetObjectReference<Menu>? _dotNetReference;
-
     #endregion
 
     #region ***** MÉTODOS LIFECYCLE *****
-
-    protected override async Task OnInitializedAsync()
-    {
-        await this.CargarItems();
-    }
-
-    protected override async Task OnAfterRenderAsync(bool bPrimeraVez)
-    {
-        if (bPrimeraVez)
-        {
-            this._dotNetReference = DotNetObjectReference.Create(this);
-            await this.JSRuntime.InvokeVoidAsync("Utils.ConfigurarScrollInfinito", this._dotNetReference);
-        }
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        await this.JSRuntime.InvokeVoidAsync("Utils.LimpiarScrollInfinito");
-        this._dotNetReference?.Dispose();
-    }
 
     #endregion
 
     #region ***** MÉTODOS PÚBLICOS *****
 
-    [JSInvokable]
-    public async Task CargarMasItems()
-    {
-        if (!this._bCargando)
-        {
-            await this.CargarItems();
-        }
-    }
-
     #endregion
 
     #region ***** MÉTODOS PRIVADOS *****
-
-    private async Task CargarItems()
-    {
-        this._bCargando = true;
-        this.StateHasChanged();
-
-        // Simular carga de datos
-        await Task.Delay(500);
-
-        // for (int i = this._lstItems.Count; i < this._lstItems.Count + 20; i++)
-        // {
-        //     this._lstItems.Add(new ItemPinterest
-        //         {
-        //             Id = i,
-        //             ImagenUrl = this.ObtenerUrlImagenAleatoria(i),
-        //             Altura = this.ObtenerAlturaAleatoria()
-        //         });
-        // }
-
-        this._bCargando = false;
-        this.StateHasChanged();
-    }
-
-    private string ObtenerUrlImagenAleatoria(int iSeed)
-    {
-        int iAltura = this.ObtenerAlturaAleatoria();
-        return $"https://picsum.photos/300/{iAltura}?random={iSeed}";
-    }
-
-    private int ObtenerAlturaAleatoria()
-    {
-        int[] aAlturas = { 200, 250, 300, 350, 400, 450, 500 };
-        return aAlturas[this._random.Next(aAlturas.Length)];
-    }
-
-    private void AbrirDetalle(int iItemId)
-    {
-        // Lógica para abrir detalle del item
-        Console.WriteLine($"Abrir detalle del item {iItemId}");
-    }
-
-    private void AbrirMenuMovil()
-    {
-        // Lógica para abrir menú en móvil
-        Console.WriteLine("Abrir menú móvil");
-    }
-
-    #endregion
-
-    #region ***** CLASES INTERNAS *****
-
-    private class ItemPinterest
-    {
-        public int Id { get; set; }
-        public string ImagenUrl { get; set; } = string.Empty;
-        public int Altura { get; set; }
-    }
-
     #endregion
 }

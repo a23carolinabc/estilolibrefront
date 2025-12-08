@@ -1,18 +1,20 @@
-﻿<MudNavMenu Class="mud-width-full">
-    <MudText Typo="Typo.h6" Class="px-4 pt-3">Menú</MudText>
-    <MudText Typo="Typo.body2" Class="px-4 mud-text-tertiary">Opciones</MudText>
-    <MudDivider Class="my-2" />
-    <MudNavLink Href="/prendas/crear" Icon="@Icons.Material.Filled.DashboardCustomize">Añadir prenda</MudNavLink>
-    <MudNavLink Href="/servers" Icon="@Icons.Material.Filled.DashboardCustomize">Crear conjunto</MudNavLink>
-</MudNavMenu>
+﻿<MudDrawer Open="true" Elevation="0" Variant="@DrawerVariant.Persistent"
+           ClipMode="DrawerClipMode.Never">
+    <MudPaper Width="100%" Height="100%" Class="d-inline-flex py-3" Elevation="0" Outlined=true >
+        <MudNavMenu Class="mud-width-full">
+            <MudText Typo="Typo.h6" Class="px-4">EstiloLibre</MudText>
+            <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">Menú</MudText>
+            <MudDivider Class="my-2" />
+            <MudNavLink Href="/prendas/crear" Icon="@Icons.Material.Filled.DashboardCustomize">Crear prenda</MudNavLink>
+        </MudNavMenu>
+    </MudPaper>
+</MudDrawer>
+
 
 @code {
     #region ***** DEPENDENCIAS *****
     [Inject]
     public required IStringLocalizer<TrGeneral> Traductor { get; set; }
-
-    [Inject]
-    public required ServicioNavegacion Navegacion { get; set; }
 
     #endregion
 
@@ -21,15 +23,9 @@
 
     #region ***** PROPIEDADES PRIVADAS *****
 
-    private string _rutaActual = string.Empty;
-
     #endregion
 
     #region ***** MÉTODOS LIFECYCLE *****
-
-    protected override void OnInitialized()
-    {
-    }
 
     #endregion
 
@@ -39,17 +35,6 @@
     #endregion
 
     #region ***** MÉTODOS PRIVADOS *****
-
-    private void NavegarA(string strRuta)
-    {
-        this.Navegacion.NavegarA(strRuta);
-    }
-
-    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
-    {
-        this._rutaActual = e.Location;
-        this.StateHasChanged();
-    }
 
     #endregion
 }
