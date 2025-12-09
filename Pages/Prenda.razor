@@ -1,6 +1,7 @@
 ﻿@using EstiloLibreFront.Objetos.Prendas
 @using EstiloLibreFront.Servicios 
-@page "/prendas/crear"
+@page "/prendas/"
+@page "/prendas/{Id:int}"
 @page "/"
 @layout MainLayout
 
@@ -302,6 +303,11 @@
     public required IStringLocalizer<TrPrendas> Traductor { get; set; }
     #endregion
 
+    #region ***** PARAMETROS *****
+    [Parameter]
+    public int Id { get; set; }
+    #endregion
+
     #region ***** PROPIEDADES PRIVADAS *****
 
     private PrendaData? _prendaData = null;
@@ -322,8 +328,16 @@
             // Notificamos la carga de datos.
             this._bCargandoDatos = true;
 
-            // Cargar datos necesarios para el formulario,
-            this._prendaData = await this.ServicioPrendas.AddNew();
+            // Cargar datos necesarios para el formulario.
+            if(this.Id > 0)
+            {
+                this._prendaData = await this.ServicioPrendas.ShowData(this.Id);
+            } else
+            {                
+                this._prendaData = await this.ServicioPrendas.AddNew();
+            }
+            
+            //Iniciamos objeto prenda.
             if (this._prendaData == null)
             {
                 this.ServicioNotificacion.Add(this.TraductorErrores["ERR_CargaDatosIniciales"], Severity.Error);
@@ -331,6 +345,10 @@
             else
             {
                 this._prenda = this._prendaData.Prenda?? new();
+                if (!string.IsNullOrEmpty(this._prenda.FotoBase64))
+                {
+                    this._strImagenPreview = this._prenda.FotoBase64;
+                }
             }
         }
         catch (Exception ex)
@@ -411,7 +429,7 @@
             }
             else
             {
-                this.ServicioNotificacion.Add(this.TraductorErrores["ERR_FondoNoEliminado"], Severity.Success);
+                this.ServicioNotificacion.Add(this.TraductorErrores["ERR_FondoNoEliminado"], Severity.Error);
                 throw new Exception(this.TraductorErrores["ERR_FondoNoEliminado"]);
             }
         }

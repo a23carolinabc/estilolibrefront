@@ -2,11 +2,10 @@
 {
     public class URLsPantallas
     {        
-        // Menú.
-        public const string Menu = "menu";
+        public const string Menu = "menu/";
 
-        // Login.
-        public const string Login = "login";
-    
+        public const string Login = "login/";
+
+        public const string Prendas = "prendas/";    
     }
 }

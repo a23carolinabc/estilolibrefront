@@ -10,9 +10,9 @@ namespace EstiloLibreFront.Servicios
     {
         #region ***** PROPIEDADES *****
         private string _urlSaveData = "api/Prendas/savedata";
-        private string _urlShowData = "Prendas/showdata/";
+        private string _urlShowData = "api/Prendas/showdata/";
         private string _urlAddNew = "api/Prendas/addnew";
-        private string _urlDelete = "Prendas/delete/";
+        private string _urlDelete = "api/Prendas/delete/";
         #endregion
 
         #region ***** CONSTRUCTORES *****
@@ -36,7 +36,27 @@ namespace EstiloLibreFront.Servicios
 
             //Enviar petición al servidor.
             respuestaHttp = await this._factoriaClientesHttp.CreateClient("API")
-                    .GetAsync(_urlAddNew);
+                    .GetAsync(this._urlAddNew);
+
+            //Comprobar status 200.
+            strDatos = this.ProcesarRespuestaTexto<string>(respuestaHttp);
+
+            //Deserializar y devolver respuesta.
+            prendaData = JsonSerializer.Deserialize<PrendaData>(strDatos, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            return prendaData;
+        }
+
+        public async Task<PrendaData?> ShowData(int iPrendaId)
+        {
+            PrendaData? prendaData;
+            HttpResponseMessage respuestaHttp;
+            string strDatos;
+
+            prendaData = new PrendaData();
+
+            //Enviar petición al servidor.
+            respuestaHttp = await this._factoriaClientesHttp.CreateClient("API")
+                    .GetAsync(this._urlShowData+iPrendaId);
 
             //Comprobar status 200.
             strDatos = this.ProcesarRespuestaTexto<string>(respuestaHttp);
