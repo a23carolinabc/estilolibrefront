@@ -1,0 +1,393 @@
+﻿@page "/conjuntos/"
+@page "/conjuntos/{Id:int}"
+@using EstiloLibreFront.Objetos.Conjuntos
+@inject ServicioConjuntos ServicioConjuntos
+@inject ServicioDatosContexto ServicioDatosContexto
+@inject NavigationManager NavigationManager
+@inject ISnackbar Snackbar
+@inject IJSRuntime JS
+@layout MainLayout
+
+
+<PageTitle>@(this.Id.HasValue ? "Editar Conjunto" : "Crear Conjunto")</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
+    <MudText Typo="Typo.h4" Class="mb-4">
+        @(this.Id.HasValue ? "Editar Conjunto" : "Crear Conjunto")
+    </MudText>
+
+    @if (this._cargando)
+    {
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+    }
+    else
+    {
+        <MudStepper @ref="@this._stepper" 
+                    Linear="true" 
+                    Color="Color.Primary"
+                    HeaderSize="Size.Large">
+            
+            <!-- PASO 1: Selección de Prendas -->
+            <MudStep Title="Seleccionar Prendas">
+                <ChildContent>
+                    <MudText Typo="Typo.h6" Class="mb-3">
+                        Selecciona las prendas que formarán tu conjunto
+                    </MudText>
+
+                    @if (this._prendasDisponibles == null || !this._prendasDisponibles.Any())
+                    {
+                        <MudAlert Severity="Severity.Warning">
+                            No tienes prendas disponibles. Primero debes subir algunas prendas.
+                        </MudAlert>
+                    }
+                    else
+                    {
+                        <MudGrid>
+                            @foreach (var prenda in this._prendasDisponibles)
+                            {
+                                bool bEstaSeleccionada = this._prendasSeleccionadas.Contains(prenda.Id);
+                                
+                                <MudItem xs="6" sm="4" md="3" lg="2">
+                                    <MudCard Class="@(bEstaSeleccionada ? "prenda-seleccionada" : "")"
+                                             Style="cursor: pointer;"
+                                             @onclick="@(() => ToggleSeleccionPrenda(prenda.Id))">
+                                        <MudCardMedia Image="@prenda.ImagenBase64" Height="150" />
+                                        @if (bEstaSeleccionada)
+                                        {
+                                            <MudOverlay Visible="true" DarkBackground="false" Absolute="true">
+                                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" 
+                                                         Color="Color.Success" 
+                                                         Size="Size.Large" />
+                                            </MudOverlay>
+                                        }
+                                    </MudCard>
+                                </MudItem>
+                            }
+                        </MudGrid>
+                    }
+                </ChildContent>
+            </MudStep>
+
+            <!-- PASO 2: Composición Visual -->
+            <MudStep Title="Componer Outfit" CanSkip="false">
+                <ChildContent>
+                    <MudText Typo="Typo.h6" Class="mb-3">
+                        Arrastra y coloca las prendas en el canvas
+                    </MudText>
+
+                    <ConjuntoCanvas @ref="@this._canvasComponent"
+                                   PrendasSeleccionadas="@this._prendasSeleccionadas"
+                                   PrendasDisponibles="@this._prendasDisponibles"
+                                   ComposicionInicial="@this._composicionCanvas" />
+                </ChildContent>
+            </MudStep>
+
+            <!-- PASO 3: Datos del Conjunto -->
+            <MudStep Title="Datos del Conjunto">
+                <ChildContent>
+                    <MudGrid>
+                        <MudItem xs="12" md="6">
+                            <MudTextField @bind-Value="@this._conjuntoDTO.Nombre"
+                                        Label="Nombre del Conjunto"
+                                        Variant="Variant.Outlined"
+                                        Required="true" />
+                        </MudItem>
+
+                        <MudItem xs="12" md="6">
+                            <MudSelect @bind-Value="@this._conjuntoDTO.EstacionId"
+                                     Label="Estación"
+                                     Variant="Variant.Outlined"
+                                     Required="true">
+                                @if (this._datosConjunto?.Estaciones != null)
+                                {
+                                    @foreach (var estacion in this._datosConjunto.Estaciones)
+                                    {
+                                        <MudSelectItem Value="@estacion.Id">@estacion.Nombre</MudSelectItem>
+                                    }
+                                }                                
+                            </MudSelect>
+                        </MudItem>
+
+                        <MudItem xs="12" md="6">
+                            <MudSelect @bind-Value="@this._conjuntoDTO.EstiloId"
+                                     Label="Estilo"
+                                     Variant="Variant.Outlined">
+                                @if (this._datosConjunto?.Estilos != null)
+    {
+                                     @foreach (var estilo in this._datosConjunto.Estilos)
+                                {
+                                    <MudSelectItem Value="@((int?)estilo.Id)">@estilo.Nombre</MudSelectItem>
+                                }
+                                }
+                            </MudSelect>
+                        </MudItem>
+
+                        <MudItem xs="12">
+                            <MudTextField @bind-Value="@this._conjuntoDTO.Descripcion"
+                                        Label="Descripción"
+                                        Variant="Variant.Outlined"
+                                        Lines="3" />
+                        </MudItem>
+
+                        <MudItem xs="12" md="6">
+                            <MudTextField @bind-Value="@this._conjuntoDTO.Etiquetas"
+                                        Label="Etiquetas (separadas por comas)"
+                                        Variant="Variant.Outlined"
+                                        HelperText="Ej: trabajo, verano2024, casual" />
+                        </MudItem>
+@* 
+                        <MudItem xs="12" md="6">
+                            <MudSwitch @bind-Checked="@this._conjuntoDTO.EsFavorito"
+                                     Label="Marcar como favorito"
+                                     Color="Color.Error" />
+                        </MudItem> *@                                             
+
+                        <MudItem xs="12">
+                            <MudTextField @bind-Value="@this._conjuntoDTO.NotasPersonales"
+                                        Label="Notas Personales"
+                                        Variant="Variant.Outlined"
+                                        Lines="3" />
+                        </MudItem>
+                    </MudGrid>
+                </ChildContent>
+            </MudStep>
+
+        </MudStepper>
+
+        <MudDivider Class="my-4" />
+
+        <MudStack Row="true" Justify="Justify.SpaceBetween">
+            <MudButton Variant="Variant.Text" 
+                       OnClick="@Cancelar">
+                Cancelar
+            </MudButton>
+
+            <MudStack Row="true" Spacing="2">
+                @if (this._stepper?.ActiveIndex > 0)
+                {
+                    <MudButton Variant="Variant.Outlined" 
+                               OnClick="@(() => IrAPasoAnterior())">
+                        Anterior
+                    </MudButton>
+                }
+
+                @if (this._stepper?.ActiveIndex < 2)
+                {
+                    <MudButton Variant="Variant.Filled" 
+                               Color="Color.Primary"
+                               OnClick="@(() => IrAPasoSiguiente())"
+                               Disabled="@(!this.PuedeAvanzarPaso())">
+                        Siguiente
+                    </MudButton>
+                }
+                else
+                {
+                    <MudButton Variant="Variant.Filled" 
+                               Color="Color.Primary"
+                               OnClick="@GuardarConjunto"
+                               Disabled="@this._guardando">
+                        @if (this._guardando)
+                        {
+                            <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                        }
+                        else
+                        {
+                            <text>Guardar Conjunto</text>
+                        }
+                    </MudButton>
+                }
+            </MudStack>
+        </MudStack>
+    }
+</MudContainer>
+
+<style>
+    .prenda-seleccionada {
+        border: 3px solid var(--mud-palette-primary);
+        box-shadow: 0 0 10px var(--mud-palette-primary);
+    }
+</style>
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+
+    private MudStepper? _stepper;
+    private ConjuntoCanvas? _canvasComponent;
+    private ConjuntoData? _datosConjunto;
+    private ConjuntoDTO _conjuntoDTO;
+    private List<Canvas.PrendaConImagenDTO>? _prendasDisponibles;
+    private List<int> _prendasSeleccionadas;
+    private Canvas.ComposicionCanvas? _composicionCanvas;
+    private bool _cargando;
+    private bool _guardando;
+
+    // public ConjuntoCrear()
+    // {
+    //     this._conjuntoDTO = new ConjuntoDTO();
+    //     this._prendasSeleccionadas = new List<int>();
+    // }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await this.CargarDatos();
+    }
+
+    private async Task CargarDatos()
+    {
+        int iUsuarioId;
+
+        try
+        {
+            this._cargando = true;
+            iUsuarioId = this.ServicioDatosContexto.GetUsuarioId();
+
+            // Cargar prendas disponibles
+            this._prendasDisponibles = await this.ServicioConjuntos.GetPrendasUsuario(iUsuarioId);
+
+            // Si es edición, cargar datos del conjunto
+            if (this.Id.HasValue)
+            {
+                this._datosConjunto = await this.ServicioConjuntos.ShowData(this.Id.Value);
+                this._conjuntoDTO = this.MapearDTOAFormulario(this._datosConjunto.Conjunto!);
+                this._prendasSeleccionadas = this._datosConjunto.Conjunto!.PrendasIds ?? new();
+                this._composicionCanvas = Canvas.ComposicionCanvas.DeserializarDesdeJson(this._datosConjunto.Conjunto.DatosComposicion);
+            }
+            else
+            {
+                this._datosConjunto = await this.ServicioConjuntos.AddNew();
+            }
+        }
+        catch (Exception ex)
+        {
+            this.Snackbar.Add($"Error al cargar datos: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            this._cargando = false;
+        }
+    }
+
+    private void ToggleSeleccionPrenda(int iPrendaId)
+    {
+        if (this._prendasSeleccionadas.Contains(iPrendaId))
+        {
+            this._prendasSeleccionadas.Remove(iPrendaId);
+        }
+        else
+        {
+            this._prendasSeleccionadas.Add(iPrendaId);
+        }
+    }
+
+    private bool PuedeAvanzarPaso()
+    {
+        int iPasoActual;
+
+        if (this._stepper == null)
+        {
+            return false;
+        }
+
+        iPasoActual = this._stepper.ActiveIndex;
+
+        // Paso 0: Debe tener al menos una prenda seleccionada
+        if (iPasoActual == 0)
+        {
+            return this._prendasSeleccionadas.Any();
+        }
+
+        return true;
+    }
+
+    private void IrAPasoAnterior()
+    {
+        if (this._stepper != null && this._stepper.ActiveIndex > 0)
+        {
+            this._stepper.ActiveIndex--;
+        }
+    }
+
+    private void IrAPasoSiguiente()
+    {
+        if (this._stepper != null && this._stepper.ActiveIndex < 2)
+        {
+            this._stepper.ActiveIndex++;
+        }
+    }
+
+    private async Task GuardarConjunto()
+    {
+        string strComposicionJson;
+        string? strImagenCompuesta;
+
+        try
+        {
+            this._guardando = true;
+
+            // Validar campos obligatorios
+            if (string.IsNullOrWhiteSpace(this._conjuntoDTO.Nombre))
+            {
+                this.Snackbar.Add("El nombre es obligatorio", Severity.Warning);
+                return;
+            }
+
+            if (this._conjuntoDTO.EstacionId == 0)
+            {
+                this.Snackbar.Add("Ocasión y estación son obligatorios", Severity.Warning);
+                return;
+            }
+
+            // Obtener composición del canvas
+            strComposicionJson = await this._canvasComponent!.ObtenerComposicionJson();
+            this._conjuntoDTO.DatosComposicion = strComposicionJson;
+
+            // Obtener imagen compuesta
+            strImagenCompuesta = await this._canvasComponent.GenerarImagenCompuesta();
+            this._conjuntoDTO.ImagenBase64 = strImagenCompuesta;
+
+            // Asignar prendas seleccionadas
+            this._conjuntoDTO.PrendasIds = this._prendasSeleccionadas;
+
+            // Guardar
+            await this.ServicioConjuntos.SaveData(this._conjuntoDTO);
+
+            this.Snackbar.Add("Conjunto guardado correctamente", Severity.Success);
+            this.NavigationManager.NavigateTo(URLsPantallas.Conjuntos);
+        }
+        catch (Exception ex)
+        {
+            this.Snackbar.Add($"Error al guardar: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            this._guardando = false;
+        }
+    }
+
+    private void Cancelar()
+    {
+        this.NavigationManager.NavigateTo(URLsPantallas.Conjuntos);
+    }
+
+    private ConjuntoDTO MapearDTOAFormulario(ConjuntoDTO conjunto)
+    {
+        ConjuntoDTO dto;
+
+        dto = new ConjuntoDTO
+        {
+            Id = conjunto.Id,
+            Nombre = conjunto.Nombre,
+            EstacionId = conjunto.EstacionId,
+            EstiloId = conjunto.EstiloId,
+            Descripcion = conjunto.Descripcion,
+            Etiquetas = conjunto.Etiquetas,
+            EsFavorito = conjunto.EsFavorito,
+            DatosComposicion = conjunto.DatosComposicion,
+            NotasPersonales = conjunto.NotasPersonales,
+            PrendasIds = conjunto.PrendasIds ?? new()
+        };
+
+        return dto;
+    }
+}

@@ -158,6 +158,11 @@ public class ServicioDatosContexto
         return this._datosContexto?.TokenDecodificado?.GetLoginUsuario() ?? "";
     }
 
+    public int GetUsuarioId()
+    {
+        return Convert.ToInt32(this._datosContexto?.TokenDecodificado?.GetUsuarioId());
+    }
+
     #endregion
 
     #region ***** MÉTODOS PRIVADOS *****

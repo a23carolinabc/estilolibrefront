@@ -31,6 +31,11 @@ public class UtilsTokenJwt
             return this._token.Claims.FirstOrDefault(c => c.Type == ClaimsUsuario.LOGIN)?.Value;
         }
 
+        public string? GetUsuarioId()
+        {
+            return this._token.Claims.FirstOrDefault(c => c.Type == ClaimsUsuario.ID)?.Value;
+        }
+
         public string? GetNombrePersona()
         {
             return this._token.Claims.FirstOrDefault(c => c.Type == ClaimsUsuario.NOMBRE)?.Value;

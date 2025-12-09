@@ -1,0 +1,248 @@
+﻿@using EstiloLibreFront.Objetos.Conjuntos
+@inject IJSRuntime JS
+
+<div class="canvas-container">
+    <div class="canvas-area" 
+         style="width: @(this.Ancho)px; height: @(this.Alto)px; background-color: white; position: relative; border: 1px solid #ccc;"
+         @ref="this._canvasElement">
+        
+        @foreach (var prenda in this._prendasEnCanvas)
+        {
+            <div class="prenda-canvas @(prenda.EstaSeleccionada ? "seleccionada" : "")"
+                 style="position: absolute; 
+                        left: @(prenda.X)px; 
+                        top: @(prenda.Y)px; 
+                        width: @(prenda.Ancho)px; 
+                        height: @(prenda.Alto)px;
+                        transform: rotate(@(prenda.Rotacion)deg);
+                        z-index: @(prenda.ZIndex);
+                        cursor: move;"
+                 @onclick="@(() => SeleccionarPrenda(prenda))"
+                 @ondblclick="@(() => EliminarPrendaDelCanvas(prenda))">
+                <img src="@prenda.ImagenBase64" 
+                     style="width: 100%; height: 100%; object-fit: contain;" 
+                     draggable="false" />
+            </div>
+        }
+    </div>
+
+    <div class="controles-canvas mt-3">
+        <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+            <MudText Typo="Typo.body2">Prendas disponibles para añadir:</MudText>
+            @foreach (var prendaId in this.PrendasSeleccionadas ?? new())
+            {
+                var prenda = this.PrendasDisponibles?.FirstOrDefault(p => p.Id == prendaId);
+                if (prenda != null && !this._prendasEnCanvas.Any(p => p.PrendaId == prendaId))
+                {
+                    <MudChip T="string"
+                             OnClick="@(() => AñadirPrendaAlCanvas(prenda))"
+                             Color="Color.Primary"
+                             Size="Size.Small">
+                        Añadir prenda
+                    </MudChip>
+                }
+            }
+        </MudStack>
+
+        @if (this._prendaSeleccionada != null)
+        {
+            <MudDivider Class="my-2" />
+            <MudText Typo="Typo.subtitle2" Class="mb-2">Controles de prenda seleccionada:</MudText>
+            <MudStack Row="true" Spacing="2">
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowUpward" 
+                               OnClick="@(() => MoverPrenda(0, -10))" 
+                               Size="Size.Small" />
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowDownward" 
+                               OnClick="@(() => MoverPrenda(0, 10))" 
+                               Size="Size.Small" />
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" 
+                               OnClick="@(() => MoverPrenda(-10, 0))" 
+                               Size="Size.Small" />
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowForward" 
+                               OnClick="@(() => MoverPrenda(10, 0))" 
+                               Size="Size.Small" />
+                <MudIconButton Icon="@Icons.Material.Filled.ZoomIn" 
+                               OnClick="@(() => CambiarTamaño(10))" 
+                               Size="Size.Small" />
+                <MudIconButton Icon="@Icons.Material.Filled.ZoomOut" 
+                               OnClick="@(() => CambiarTamaño(-10))" 
+                               Size="Size.Small" />
+                <MudIconButton Icon="@Icons.Material.Filled.RotateLeft" 
+                               OnClick="@(() => Rotar(-15))" 
+                               Size="Size.Small" />
+                <MudIconButton Icon="@Icons.Material.Filled.RotateRight" 
+                               OnClick="@(() => Rotar(15))" 
+                               Size="Size.Small" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" 
+                               OnClick="@(() => EliminarPrendaDelCanvas(this._prendaSeleccionada))" 
+                               Size="Size.Small"
+                               Color="Color.Error" />
+            </MudStack>
+        }
+    </div>
+</div>
+
+<style>
+    .prenda-canvas {
+        border: 2px solid transparent;
+        transition: border-color 0.2s;
+    }
+
+    .prenda-canvas:hover {
+        border-color: #90caf9;
+    }
+
+    .prenda-canvas.seleccionada {
+        border-color: #1976d2;
+        box-shadow: 0 0 10px rgba(25, 118, 210, 0.5);
+    }
+</style>
+
+@code {
+    [Parameter]
+    public List<int>? PrendasSeleccionadas { get; set; }
+
+    [Parameter]
+    public List<Canvas.PrendaConImagenDTO>? PrendasDisponibles { get; set; }
+
+    [Parameter]
+    public Canvas.ComposicionCanvas? ComposicionInicial { get; set; }
+
+    public double Ancho { get; set; } = 800;
+    public double Alto { get; set; } = 1000;
+
+    private ElementReference _canvasElement;
+    private List<Canvas.PrendaEnCanvas> _prendasEnCanvas;
+    private Canvas.PrendaEnCanvas? _prendaSeleccionada;
+
+    public ConjuntoCanvas()
+    {
+        this._prendasEnCanvas = new List<Canvas.PrendaEnCanvas>();
+    }
+
+    protected override void OnParametersSet()
+    {
+        // Si hay composición inicial, cargarla
+        if (this.ComposicionInicial != null && this.ComposicionInicial.Prendas.Any())
+        {
+            this._prendasEnCanvas = this.ComposicionInicial.Prendas;
+            this.Ancho = this.ComposicionInicial.Ancho;
+            this.Alto = this.ComposicionInicial.Alto;
+        }
+    }
+
+    private void AñadirPrendaAlCanvas(Canvas.PrendaConImagenDTO prenda)
+    {
+        Canvas.PrendaEnCanvas prendaCanvas;
+        int iMaxZIndex;
+
+        prendaCanvas = new Canvas.PrendaEnCanvas
+        {
+            PrendaId = prenda.Id,
+            ImagenBase64 = prenda.ImagenBase64,
+            X = 50,
+            Y = 50,
+            Ancho = 150,
+            Alto = 150,
+            Rotacion = 0
+        };
+
+        // Asignar z-index más alto
+        iMaxZIndex = this._prendasEnCanvas.Any() ? this._prendasEnCanvas.Max(p => p.ZIndex) : 0;
+        prendaCanvas.ZIndex = iMaxZIndex + 1;
+
+        this._prendasEnCanvas.Add(prendaCanvas);
+        this.SeleccionarPrenda(prendaCanvas);
+    }
+
+    private void EliminarPrendaDelCanvas(Canvas.PrendaEnCanvas prenda)
+    {
+        this._prendasEnCanvas.Remove(prenda);
+        if (this._prendaSeleccionada == prenda)
+        {
+            this._prendaSeleccionada = null;
+        }
+    }
+
+    private void SeleccionarPrenda(Canvas.PrendaEnCanvas prenda)
+    {
+        // Deseleccionar todas
+        foreach (var p in this._prendasEnCanvas)
+        {
+            p.EstaSeleccionada = false;
+        }
+
+        // Seleccionar la clickeada
+        prenda.EstaSeleccionada = true;
+        this._prendaSeleccionada = prenda;
+    }
+
+    private void MoverPrenda(double deltaX, double deltaY)
+    {
+        if (this._prendaSeleccionada == null)
+        {
+            return;
+        }
+
+        this._prendaSeleccionada.X += deltaX;
+        this._prendaSeleccionada.Y += deltaY;
+
+        // Limitar al canvas
+        this._prendaSeleccionada.X = Math.Max(0, Math.Min(this._prendaSeleccionada.X, this.Ancho - this._prendaSeleccionada.Ancho));
+        this._prendaSeleccionada.Y = Math.Max(0, Math.Min(this._prendaSeleccionada.Y, this.Alto - this._prendaSeleccionada.Alto));
+    }
+
+    private void CambiarTamaño(double delta)
+    {
+        if (this._prendaSeleccionada == null)
+        {
+            return;
+        }
+
+        this._prendaSeleccionada.Ancho = Math.Max(50, this._prendaSeleccionada.Ancho + delta);
+        this._prendaSeleccionada.Alto = Math.Max(50, this._prendaSeleccionada.Alto + delta);
+    }
+
+    private void Rotar(double grados)
+    {
+        if (this._prendaSeleccionada == null)
+        {
+            return;
+        }
+
+        this._prendaSeleccionada.Rotacion += grados;
+    }
+
+    public async Task<string> ObtenerComposicionJson()
+    {
+        Canvas.ComposicionCanvas composicion;
+        string strJson;
+
+        composicion = new Canvas.ComposicionCanvas
+        {
+            Ancho = this.Ancho,
+            Alto = this.Alto,
+            Prendas = this._prendasEnCanvas
+        };
+
+        strJson = composicion.SerializarAJson();
+        return await Task.FromResult(strJson);
+    }
+
+    public async Task<string?> GenerarImagenCompuesta()
+    {
+        string? strImagenBase64;
+
+        try
+        {
+            // Llamar a función JS para capturar el canvas como imagen
+            strImagenBase64 = await this.JS.InvokeAsync<string>("capturarCanvas", this._canvasElement);
+            return strImagenBase64;
+        }
+        catch
+        {
+            // Si falla, devolver null
+            return null;
+        }
+    }
+}
