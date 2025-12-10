@@ -43,10 +43,10 @@
                 </MudCardHeader>
                 <MudCardContent>
 
-                    @* <InputFile id="fileInput"
+                    <InputFile id="fileInput"
                                OnChange="this.CargarImagen"
                                accept="image/*"
-                               class="d-none" /> *@
+                               class="d-none" />
 
                     @if (this._bProcesandoImagen)
                     {
@@ -64,10 +64,10 @@
                     else
                     {
                         <!-- INPUT SELECCIÓN DE IMAGEN -->
-                        <InputFile id="fileInput"
+                        @* <InputFile id="fileInput"
                                    OnChange="this.CargarImagen"
                                    accept="image/*"
-                                   class="d-none" />
+                                   class="d-none" /> *@
 
                         <!-- BOTÓN SELECCIÓN DE IMAGEN -->
                         <MudButton HtmlTag="label"
@@ -377,12 +377,12 @@
 
         try
         {
+            archivo = e.File;
+
             //Indicar espera al usuario.
             this._bProcesandoImagen = true;
             StateHasChanged();
-
-            archivo = e.File;
-
+                      
             // Validar tamaño (máximo 10MB).
             if (archivo.Size > 10 * 1024 * 1024)
             {
