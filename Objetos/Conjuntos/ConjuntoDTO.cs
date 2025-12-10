@@ -3,7 +3,6 @@
     public class ConjuntoDTO
     {
         public int Id { get; set; }
-        public int UsuarioId { get; set; }
         public int? EstacionId { get; set; }
         public int? EstiloId { get; set; }
         public string? Descripcion { get; set; }

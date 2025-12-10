@@ -1,4 +1,5 @@
 ﻿using EstiloLibreFront.Base;
+using EstiloLibreFront.Objetos.Conjuntos;
 using EstiloLibreFront.Objetos.Prendas;
 using EstiloLibreFront.Objetos.Usuarios;
 using System.Net.Http.Json;
@@ -13,6 +14,7 @@ namespace EstiloLibreFront.Servicios
         private string _urlShowData = "api/Prendas/showdata/";
         private string _urlAddNew = "api/Prendas/addnew";
         private string _urlDelete = "api/Prendas/delete/";
+        private string _urlPrendasUsuario = "api/Prendas/prendasUsuario/";
         #endregion
 
         #region ***** CONSTRUCTORES *****
@@ -84,6 +86,26 @@ namespace EstiloLibreFront.Servicios
 
             //Devolver ID de la prenda creada.
             return prendaId;
+        }
+
+        public async Task<List<Canvas.PrendaConImagenDTO>> GetPrendasUsuario(int iConjuntoId)
+        {
+            List<Canvas.PrendaConImagenDTO>? conjuntoData;
+            HttpResponseMessage respuestaHttp;
+            string strDatos;
+
+            conjuntoData = new List<Canvas.PrendaConImagenDTO>();
+
+            //Enviar petición al servidor.
+            respuestaHttp = await this._factoriaClientesHttp.CreateClient("API")
+                    .GetAsync(this._urlPrendasUsuario + iConjuntoId);
+
+            //Comprobar status 200.
+            strDatos = this.ProcesarRespuestaTexto<string>(respuestaHttp);
+
+            //Deserializar y devolver respuesta.
+            conjuntoData = JsonSerializer.Deserialize<List<Canvas.PrendaConImagenDTO>>(strDatos, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            return conjuntoData ?? new();
         }
         #endregion
     }

@@ -36,7 +36,7 @@
             {
                 <MudItem xs="12" sm="6" md="4" lg="3">
                     <MudCard>
-                        <MudCardMedia Image="@conjunto.ImagenBase64" Height="300" />
+                        <MudCardMedia Image="@conjunto.ImagenBase64" Height=300/>
                         <MudCardContent>
                             <MudText Typo="Typo.body2" Color="Color.Secondary">
                                 @conjunto.EstacionId
@@ -97,29 +97,29 @@
 
     private void IrAEditarConjunto(int iConjuntoId)
     {
-        this.NavigationManager.NavigateTo($"{URLsPantallas.Conjuntos}/{iConjuntoId}");
+        this.NavigationManager.NavigateTo($"{URLsPantallas.Conjuntos}{iConjuntoId}");
     }
 
     private async Task EliminarConjunto(int iConjuntoId)
     {
-        // bool bConfirmado;
+        bool bConfirmado;
 
-        // bConfirmado = await this.MostrarDialogoConfirmacion();
-        // if (!bConfirmado)
-        // {
-        //     return;
-        // }
+        bConfirmado = await this.MostrarDialogoConfirmacion();
+        if (!bConfirmado)
+        {
+            return;
+        }
 
-        // try
-        // {
-        //     await this.ServicioConjuntos.(iConjuntoId);
-        //     this.Snackbar.Add("Conjunto eliminado correctamente", Severity.Success);
-        //     await this.CargarConjuntos();
-        // }
-        // catch (Exception ex)
-        // {
-        //     this.Snackbar.Add($"Error al eliminar: {ex.Message}", Severity.Error);
-        // }
+        try
+        {
+            await this.ServicioConjuntos.Delete(iConjuntoId);
+            this.Snackbar.Add("Conjunto eliminado correctamente", Severity.Success);
+            await this.CargarConjuntos();
+        }
+        catch (Exception ex)
+        {
+            this.Snackbar.Add($"Error al eliminar: {ex.Message}", Severity.Error);
+        }
     }
 
     private async Task<bool> MostrarDialogoConfirmacion()

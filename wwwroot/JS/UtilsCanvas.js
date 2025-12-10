@@ -1,5 +1,4 @@
-﻿// Utilidades para manejo de canvas y eventos de mouse
-let mouseUpListenerRef = null;
+﻿let mouseUpListenerRef = null;
 
 window.obtenerPosicionCanvas = function (canvasElement) {
     const rect = canvasElement.getBoundingClientRect();

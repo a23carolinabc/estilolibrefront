@@ -14,7 +14,6 @@ namespace EstiloLibreFront.Servicios
         private string _urlAddNew = "api/Conjuntos/addnew";
         private string _urlDelete = "api/Conjuntos/delete/";
         private string _urlConjuntosUsuario = "api/Conjuntos/conjuntosUsuario/";
-        private string _urlPrendasUsuario = "api/Conjuntos/prendasUsuario/";
         #endregion
 
         #region ***** CONSTRUCTORES *****
@@ -107,25 +106,21 @@ namespace EstiloLibreFront.Servicios
             conjuntoData = JsonSerializer.Deserialize<List<ConjuntoDTO>>(strDatos, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
             return conjuntoData??new();
         }
-
-        public async Task<List<Canvas.PrendaConImagenDTO>> GetPrendasUsuario(int iConjuntoId)
+               
+        public async Task<string> Delete(int iConjuntoId)
         {
-            List<Canvas.PrendaConImagenDTO>? conjuntoData;
             HttpResponseMessage respuestaHttp;
-            string strDatos;
-
-            conjuntoData = new List<Canvas.PrendaConImagenDTO>();
+            string strRespuesta;
 
             //Enviar petición al servidor.
             respuestaHttp = await this._factoriaClientesHttp.CreateClient("API")
-                    .GetAsync(this._urlPrendasUsuario + iConjuntoId);
+                    .DeleteAsync(this._urlDelete + iConjuntoId);
 
             //Comprobar status 200.
-            strDatos = this.ProcesarRespuestaTexto<string>(respuestaHttp);
+            strRespuesta = this.ProcesarRespuestaTexto<string>(respuestaHttp);
 
-            //Deserializar y devolver respuesta.
-            conjuntoData = JsonSerializer.Deserialize<List<Canvas.PrendaConImagenDTO>>(strDatos, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-            return conjuntoData ?? new();
+            //Devolver respuesta.
+            return strRespuesta;
         }
         #endregion
     }

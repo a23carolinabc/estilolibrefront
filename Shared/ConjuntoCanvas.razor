@@ -2,6 +2,7 @@
 
 <div class="canvas-container">
     <div class="canvas-area"
+         id="canvas-composicion"
          style="width: @(this._dAncho)px; height: @(this._dAlto)px; background-color: white; position: relative; border: 1px solid #ccc;"
          @ref="this._canvasElement"
          @onmousemove="OnMouseMove"
@@ -105,7 +106,7 @@
     #endregion
 
     #region ***** PROPIEDADES PRIVADAS *****
-    private double _dAncho = 800;
+    private double _dAncho = 400;
     private double _dAlto = 400;
     private ElementReference _canvasElement;
     private List<Canvas.PrendaEnCanvas> _prendasEnCanvas = new();
@@ -192,13 +193,19 @@
 
         try
         {
+            // Forzar un StateHasChanged para asegurar que el DOM está actualizado
+            StateHasChanged();
+
+            // Esperar un momento para que el navegador termine de renderizar
+            await Task.Delay(100);
+
             // Llamar a función JS para capturar el canvas como imagen
-            strImagenBase64 = await this.JS.InvokeAsync<string>("capturarCanvas", this._canvasElement);
+            strImagenBase64 = await this.JS.InvokeAsync<string>("capturarCanvas", "#canvas-composicion");
             return strImagenBase64;
         }
-        catch
+        catch(Exception e)
         {
-            // Si falla, devolver null
+            Console.WriteLine(e.Message);
             return null;
         }
     }
