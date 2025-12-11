@@ -8,39 +8,27 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\css\Pages\Conocenos.css" />
+    <Content Remove="wwwroot\css\Pages\Inicio.css" />
+    <Content Remove="wwwroot\css\Shared\MenuSuperior.css" />
+    <Content Remove="wwwroot\css\Shared\MenuSuperiorPublico.css" />
+  </ItemGroup>
+
+  <ItemGroup>
 	<BlazorWebAssemblyAdditionalCulture Include="gl-ES" />
-  </ItemGroup>
-	
-  <ItemGroup>
-    <Compile Remove="Objetos\AvisoDataDB.cs" />
-    <Compile Remove="Objetos\AvisoDTO.cs" />
-    <Compile Remove="Objetos\IncidenciaDataDB.cs" />
-    <Compile Remove="Objetos\IncidenciaDTO.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Remove="ElementosFormulario\Validacion.razor" />
-    <Content Remove="Pages\BusquedaAvisos.razor" />
-    <Content Remove="Pages\RegistroAviso.razor" />
-    <Content Remove="Pages\RegistroIncidencia.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="ElementosFormulario\Validacion.razor.css" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Traducciones\TrGeneral\TrGeneral.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>TrGeneral.resx</DependentUpon>
-    </Content>
-    <Content Include="Traducciones\TrGeneral\TrGeneral.es.resx" />
-    <Content Include="Traducciones\TrGeneral\TrGeneral.resx" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Pages\Login.razor" />
+    <None Include="wwwroot\css\Layout\LayoutPublico.css" />
+    <None Include="wwwroot\css\Layout\MainLayout.css" />
+    <None Include="wwwroot\css\Pages\Conocenos.css" />
+    <None Include="wwwroot\css\Pages\Inicio.css" />
+    <None Include="wwwroot\css\Shared\Cargador.css" />
+    <None Include="wwwroot\css\Shared\ConjuntoCanvas.css" />
+    <None Include="wwwroot\css\Shared\MenuSuperior.css" />
+    <None Include="wwwroot\css\Shared\MenuSuperiorPublico.css" />
+    <None Include="wwwroot\css\Shared\PiePagina.css" />
     <None Include="wwwroot\Recursos\icono-formulario.svg" />
     <None Include="wwwroot\Recursos\icono-listado.svg" />
     <None Include="wwwroot\Recursos\logo.svg" />
@@ -61,6 +49,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Traducciones\TrConocenos\TrConocenos.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TrConocenos.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Traducciones\TrInicio\TrInicio.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TrInicio.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Traducciones\TrShared\TrShared.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TrShared.resx</DependentUpon>
+    </Compile>
     <Compile Update="Traducciones\TrErrores\TrErrores.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -72,37 +75,36 @@
       <DependentUpon>TrGeneral.resx</DependentUpon>
     </Compile>
     <Compile Update="Traducciones\TrPrendas\TrPrendas.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
       <DependentUpon>TrPrendas.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Update="Traducciones\TrMenu\TrMenu.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>TrMenu.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Traducciones\TrConocenos\TrConocenos.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TrConocenos.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Traducciones\TrInicio\TrInicio.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TrInicio.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Traducciones\TrShared\TrShared.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TrShared.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Traducciones\TrErrores\TrErrores.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>TrErrores.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Traducciones\TrGeneral\TrGeneral.es.resx">
-      <LastGenOutput>General.es.Designer.cs</LastGenOutput>
-      <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Traducciones\TrGeneral\TrGeneral.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>TrGeneral.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Traducciones\TrPrendas\TrPrendas.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>TrPrendas.Designer.cs</LastGenOutput>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Traducciones\TrMenu\TrMenu.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>TrMenu.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

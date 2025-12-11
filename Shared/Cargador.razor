@@ -1,8 +1,9 @@
-﻿<MudDialog @ref="this._dialog" Options="this._dialogConfiguracion" Class="transparent-loading-dialog" 
-            Style="background-color:transparent; box-shadow:none; border:none;">
+﻿<link href="css/Shared/Cargador.css" rel="stylesheet" />
+
+<MudDialog @ref="this._dialog" Options="this._dialogConfiguracion" Class="dialog">
     <DialogContent>
-        <div class="transparent-content">
-            <svg class="loading-progress">
+        <div class="contenido">
+            <svg class="carga">
                 <circle r="40%" cx="50%" cy="50%" />
             </svg>
         </div>

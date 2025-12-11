@@ -2,11 +2,17 @@
            ClipMode="DrawerClipMode.Never">
     <MudPaper Width="100%" Height="100%" Class="d-inline-flex py-3" Elevation="0" Outlined=true >
         <MudNavMenu Class="mud-width-full">
-            <MudText Typo="Typo.h6" Class="px-4">EstiloLibre</MudText>
-            <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">Menú</MudText>
+            <MudText Typo="Typo.h6" Class="px-4">@Traductor["EstiloLibre"]</MudText>
+            <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">@Traductor["lblMenu"]</MudText>
             <MudDivider Class="my-2" />
-            <MudNavLink Href="/prendas/" Icon="@Icons.Material.Filled.DashboardCustomize">Crear prenda</MudNavLink>
-            <MudNavLink Href="/listadoConjuntos/" Icon="@Icons.Material.Filled.DashboardCustomize">Crear conjunto</MudNavLink>
+            <MudNavLink Href=@(URLsPantallas.ListadoPrendas)
+                        Icon="@Icons.Material.Filled.DashboardCustomize">@Traductor["nvlkListaPrendas"]</MudNavLink>
+            <MudNavLink Href=@(URLsPantallas.Prendas) 
+                        Icon="@Icons.Material.Filled.DashboardCustomize">@Traductor["nvlkCrearPrenda"]</MudNavLink>
+            <MudNavLink Href=@(URLsPantallas.ListadoConjuntos)
+                        Icon="@Icons.Material.Filled.DashboardCustomize">@Traductor["nvlkListaConjuntos"]</MudNavLink>
+            <MudNavLink Href=@(URLsPantallas.Conjuntos)
+                        Icon="@Icons.Material.Filled.DashboardCustomize">@Traductor["nvlkCrearConjunto"]</MudNavLink>
         </MudNavMenu>
     </MudPaper>
 </MudDrawer>
@@ -15,7 +21,7 @@
 @code {
     #region ***** DEPENDENCIAS *****
     [Inject]
-    public required IStringLocalizer<TrGeneral> Traductor { get; set; }
+    public required IStringLocalizer<TrShared> Traductor { get; set; }
 
     #endregion
 
@@ -23,10 +29,6 @@
     #endregion
 
     #region ***** PROPIEDADES PRIVADAS *****
-
-    #endregion
-
-    #region ***** MÉTODOS LIFECYCLE *****
 
     #endregion
 

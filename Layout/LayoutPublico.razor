@@ -4,24 +4,19 @@
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
-<link href="css/Layout/MainLayout.css" rel="stylesheet" />
+<link href="css/Layout/LayoutPublico.css" rel="stylesheet" />
 
 <MudLayout>
-    <MenuLateral />
-    
-    <MudMainContent>
-        <MenuSuperior />
+    <MudMainContent Class="pa-0">
+        <MenuSuperiorPublico />
 
-        @* <ContenedorCargador>
-            <Contenido>
-                <CascadingValue Value="this">
-                    @Body
-                </CascadingValue>
-            </Contenido>
-        </ContenedorCargador>   *@
-        <CascadingValue Value="this">
+        <!-- Contenido de las páginas -->
+        <div class="contenido-publico">
             @Body
-        </CascadingValue>
+        </div>
+
+        <!-- Pie de página -->
+        <PiePagina></PiePagina>
     </MudMainContent>
 </MudLayout>
 
@@ -47,14 +42,11 @@
     #endregion
 
     #region ***** PROPIEDADES PÚBLICAS *****
-
     #endregion
 
     #region ***** MÉTODOS PÚBLICOS *****
-        
     #endregion
 
     #region ***** MÉTODOS PRIVADOS *****
-
     #endregion
 }

@@ -1,15 +1,13 @@
 ﻿@implements IDisposable
 
-<div class="canvas-container">
-    <div class="canvas-area"
-         id="canvas-composicion"
-         style="width: @(this._dAncho)px; height: @(this._dAlto)px; background-color: white; position: relative; border: 1px solid #ccc;"
-         @ref="this._canvasElement"
-         @onmousemove="OnMouseMove"
-         @onmouseup="OnMouseUp"
-         @onmouseleave="OnMouseLeave">
+<link href="css/Shared/ConjuntoCanvas.css" rel="stylesheet" />
 
-        @foreach (var prenda in this._prendasEnCanvas)
+<div class="canvas-container">
+    <div id="canvas-composicion" class="canvas-area"
+         style="width: @(this._dAncho)px; height: @(this._dAlto)px; background-color: white; position: relative; border: 1px solid #ccc;"
+         @ref="this._canvas" @onmousemove="OnMouseMove" @onmouseup="OnMouseUp" @onmouseleave="OnMouseLeave">
+
+        @foreach (Canvas.PrendaEnCanvas prenda in this._prendasEnCanvas)
         {
             <div class="prenda-canvas @(prenda.EstaSeleccionada ? "seleccionada" : "")"
                  style="position: absolute;
@@ -34,55 +32,55 @@
     <div class="controles-canvas mt-3">
         @if (this._prendaSeleccionada != null)
         {
-            <MudText Typo="Typo.subtitle2" Class="mb-2">Controles de prenda seleccionada:</MudText>
+            <MudText Typo="Typo.subtitle2" Class="mb-2">@Traductor["lblControladorCanvas"]</MudText>
             <MudStack Row="true" Spacing="2">
                 <MudIconButton Icon="@Icons.Material.Filled.ArrowUpward"
                                OnClick="@(() => MoverPrenda(0, -10))"
                                Size="Size.Small"
-                               Title="Mover arriba" />
+                               Title=@Traductor["ttFlechaSubir"] />
                 <MudIconButton Icon="@Icons.Material.Filled.ArrowDownward"
                                OnClick="@(() => MoverPrenda(0, 10))"
                                Size="Size.Small"
-                               Title="Mover abajo" />
+                               Title=@Traductor["ttFlechaBajar"] />
                 <MudIconButton Icon="@Icons.Material.Filled.ArrowBack"
                                OnClick="@(() => MoverPrenda(-10, 0))"
                                Size="Size.Small"
-                               Title="Mover izquierda" />
+                               Title=@Traductor["ttFlechaIzquierda"] />
                 <MudIconButton Icon="@Icons.Material.Filled.ArrowForward"
                                OnClick="@(() => MoverPrenda(10, 0))"
                                Size="Size.Small"
-                               Title="Mover derecha" />
+                               Title=@Traductor["ttFlechaDerecha"] />
                 <MudIconButton Icon="@Icons.Material.Filled.ZoomIn"
                                OnClick="@(() => CambiarTamaño(10))"
                                Size="Size.Small"
-                               Title="Aumentar tamaño" />
+                               Title=@Traductor["ttZoomPositivo"] />
                 <MudIconButton Icon="@Icons.Material.Filled.ZoomOut"
                                OnClick="@(() => CambiarTamaño(-10))"
                                Size="Size.Small"
-                               Title="Reducir tamaño" />
+                               Title=@Traductor["ttZoomNegativo"] />
                 <MudIconButton Icon="@Icons.Material.Filled.RotateLeft"
                                OnClick="@(() => Rotar(-15))"
                                Size="Size.Small"
-                               Title="Rotar izquierda" />
+                               Title=@Traductor["ttGirarIzquierda"] />
                 <MudIconButton Icon="@Icons.Material.Filled.RotateRight"
                                OnClick="@(() => Rotar(15))"
                                Size="Size.Small"
-                               Title="Rotar derecha" />
+                               Title=@Traductor["ttGirarDerecha"] />
                 <MudIconButton Icon="@Icons.Material.Filled.Delete"
                                OnClick="@(() => EliminarPrendaDelCanvas(this._prendaSeleccionada))"
                                Size="Size.Small"
                                Color="Color.Error"
-                               Title="Eliminar prenda" />
+                               Title=@Traductor["ttEliminar"] />
             </MudStack>
 
             <MudText Typo="Typo.caption" Class="mt-2">
-                Arrastra las prendas con el mouse o usa los botones. Doble clic para eliminar.
+                @Traductor["lblExplicacionCanvasPrendaSeleccionada"]                
             </MudText>
         }
         else
         {
             <MudAlert Severity="Severity.Info" Dense="true">
-                Haz clic en una prenda para seleccionarla y poder editarla
+                @Traductor["lblExplicacionCanvas"]                
             </MudAlert>
         }
     </div>
@@ -92,6 +90,10 @@
     #region ***** INYECCIONES *****
     [Inject]
     public required IJSRuntime JS { get; set; }
+    [Inject]
+    public required IStringLocalizer<TrErrores> TraductorErrores { get; set; }
+    [Inject]
+    public required IStringLocalizer<TrShared> Traductor { get; set; }
     #endregion
 
     #region ***** PARÁMETROS *****
@@ -99,23 +101,23 @@
     public List<int>? PrendasSeleccionadas { get; set; }
 
     [Parameter]
-    public List<Canvas.PrendaConImagenDTO>? PrendasDisponibles { get; set; }
+    public List<PrendaResumenDTO>? PrendasDisponibles { get; set; }
 
     [Parameter]
     public Canvas.ComposicionCanvas? ComposicionInicial { get; set; }
     #endregion
 
     #region ***** PROPIEDADES PRIVADAS *****
+    private bool _bArrastrando = false;
     private double _dAncho = 400;
     private double _dAlto = 400;
-    private ElementReference _canvasElement;
-    private List<Canvas.PrendaEnCanvas> _prendasEnCanvas = new();
-    private Canvas.PrendaEnCanvas? _prendaSeleccionada;
-    private bool _bArrastrando = false;
     private double _dOffsetX = 0;
     private double _dOffsetY = 0;
     private double _dCanvasOffsetX = 0;
     private double _dCanvasOffsetY = 0;
+    private ElementReference _canvas;
+    private List<Canvas.PrendaEnCanvas> _prendasEnCanvas = new();
+    private Canvas.PrendaEnCanvas? _prendaSeleccionada;
     private Canvas.PrendaEnCanvas? _prendaArrastrada = null;
     private DotNetObjectReference<ConjuntoCanvas>? _dotNetRef;
     #endregion
@@ -220,7 +222,7 @@
         double yOffset;
         int iPrendasNuevas;
         int iMaxZIndex;
-        Canvas.PrendaConImagenDTO? prenda;
+        PrendaResumenDTO? prenda;
         Canvas.PrendaEnCanvas prendaCanvas;
 
         // Si no hay prendas devolver null
@@ -234,7 +236,7 @@
         yOffset = 50;
         iPrendasNuevas = 0;
 
-        foreach (var prendaId in this.PrendasSeleccionadas)
+        foreach (int prendaId in this.PrendasSeleccionadas)
         {
             // Solo añadir si no está ya en el canvas
             if (this._prendasEnCanvas.Any(p => p.PrendaId == prendaId))
@@ -280,12 +282,13 @@
         DatosCanvas datos;
         try
         {
-            datos = await this.JS.InvokeAsync<DatosCanvas>("obtenerPosicionCanvas", this._canvasElement);
+            datos = await this.JS.InvokeAsync<DatosCanvas>("obtenerPosicionCanvas", this._canvas);
             this._dCanvasOffsetX = datos.Izquierda;
             this._dCanvasOffsetY = datos.Arriba;
         }
-        catch
+        catch (Exception e)
         {
+            Console.WriteLine(e.Message);
             // Si falla, usar valores por defecto
             this._dCanvasOffsetX = 0;
             this._dCanvasOffsetY = 0;
@@ -374,7 +377,7 @@
     private void SeleccionarPrenda(Canvas.PrendaEnCanvas prenda)
     {
         // Deseleccionar todas
-        foreach (var p in this._prendasEnCanvas)
+        foreach (Canvas.PrendaEnCanvas p in this._prendasEnCanvas)
         {
             p.EstaSeleccionada = false;
         }

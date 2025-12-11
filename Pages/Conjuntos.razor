@@ -15,7 +15,7 @@
     }
     else
     {
-        <MudStepper @ref="@this._stepper" 
+        <MudStepper @ref="@this._stepper"
                     Linear="true"
                     OnPreviewInteraction="@OnPreviewInteraction"
                     CurrentStepColor="Color.Primary">
@@ -218,12 +218,12 @@
     private ConjuntoData? _datosConjunto;
     private ConjuntoDTO _conjuntoDTO = new();
     private Canvas.ComposicionCanvas? _composicionCanvas;
-    private List<Canvas.PrendaConImagenDTO>? _prendasDisponibles = new();
+    private List<PrendaResumenDTO>? _prendasDisponibles = new();
     private List<int> _prendasSeleccionadas = new();
     private bool _cargando;
     private bool _guardando;
     private string? _imagenCompuestaGenerada;
-    private int? _index = 0;
+    private int _index = 0;
     #endregion
 
     #region ***** MÉTODOS PÚBLICOS *****

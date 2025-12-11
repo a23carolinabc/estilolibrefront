@@ -1,5 +1,5 @@
 ﻿using EstiloLibreFront.Base;
-using EstiloLibreFront.Objetos.Conjuntos;
+using EstiloLibreFront.Objetos;
 using EstiloLibreFront.Objetos.Prendas;
 using EstiloLibreFront.Objetos.Usuarios;
 using System.Net.Http.Json;
@@ -88,13 +88,13 @@ namespace EstiloLibreFront.Servicios
             return prendaId;
         }
 
-        public async Task<List<Canvas.PrendaConImagenDTO>> GetPrendasUsuario(int iConjuntoId)
+        public async Task<List<PrendaResumenDTO>> GetPrendasUsuario(int iConjuntoId)
         {
-            List<Canvas.PrendaConImagenDTO>? conjuntoData;
+            List<PrendaResumenDTO>? conjuntoData;
             HttpResponseMessage respuestaHttp;
             string strDatos;
 
-            conjuntoData = new List<Canvas.PrendaConImagenDTO>();
+            conjuntoData = new List<PrendaResumenDTO>();
 
             //Enviar petición al servidor.
             respuestaHttp = await this._factoriaClientesHttp.CreateClient("API")
@@ -104,8 +104,24 @@ namespace EstiloLibreFront.Servicios
             strDatos = this.ProcesarRespuestaTexto<string>(respuestaHttp);
 
             //Deserializar y devolver respuesta.
-            conjuntoData = JsonSerializer.Deserialize<List<Canvas.PrendaConImagenDTO>>(strDatos, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            conjuntoData = JsonSerializer.Deserialize<List<PrendaResumenDTO>>(strDatos, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
             return conjuntoData ?? new();
+        }
+
+        public async Task<string> Delete(int iConjuntoId)
+        {
+            HttpResponseMessage respuestaHttp;
+            string strRespuesta;
+
+            //Enviar petición al servidor.
+            respuestaHttp = await this._factoriaClientesHttp.CreateClient("API")
+                    .DeleteAsync(this._urlDelete + iConjuntoId);
+
+            //Comprobar status 200.
+            strRespuesta = this.ProcesarRespuestaTexto<string>(respuestaHttp);
+
+            //Devolver respuesta.
+            return strRespuesta;
         }
         #endregion
     }

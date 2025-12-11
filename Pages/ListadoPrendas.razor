@@ -1,7 +1,8 @@
-﻿@layout MainLayout
-@page "/listadoConjuntos"
+﻿@page "/listadoPrendas"
+@layout MainLayout
 
-<PageTitle>Mis Conjuntos</PageTitle>
+
+<PageTitle>Mis prendas</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
     <MudText Typo="Typo.h4" Class="mb-4">Mis Conjuntos</MudText>
@@ -18,7 +19,7 @@
     {
         <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
     }
-    else if (this._conjuntos == null || !this._conjuntos.Any())
+    else if (this._prendas == null || !this._prendas.Any())
     {
         <MudAlert Severity="Severity.Info">
             No tienes conjuntos creados. ¡Crea tu primer conjunto!
@@ -27,16 +28,12 @@
     else
     {
         <MudGrid>
-            @foreach (var conjunto in this._conjuntos)
+            @foreach (var conjunto in this._prendas)
             {
                 <MudItem xs="12" sm="6" md="4" lg="3">
                     <MudCard>
                         <MudCardMedia Image="@conjunto.ImagenBase64" Height=300/>
-                        <MudCardContent>
-                            @if (conjunto.EsFavorito)
-                            {
-                                <MudIcon Icon="@Icons.Material.Filled.Favorite" Color="Color.Error" Size="Size.Small" />
-                            }
+                        <MudCardContent>                            
                         </MudCardContent>
                         <MudCardActions>
                             <MudIconButton Icon="@Icons.Material.Filled.Edit"
@@ -56,7 +53,7 @@
 @code {
     #region ***** INYECCIONES *****
     [Inject]
-    public ServicioConjuntos ServicioConjuntos { get; set; }
+    public ServicioPrendas ServicioPrendas { get; set; }
     [Inject]
     public ServicioDatosContexto ServicioDatosContexto { get; set; }
     [Inject]
@@ -66,7 +63,7 @@
     #endregion
 
     #region ***** PROPIEDADES PRIVADAS *****
-    private List<ConjuntoDTO>? _conjuntos;
+    private List<PrendaResumenDTO>? _prendas;
     private bool _cargando;
     #endregion
 
@@ -84,7 +81,7 @@
         {
             this._cargando = true;
             iUsuarioId = this.ServicioDatosContexto.GetUsuarioId();
-            this._conjuntos = await this.ServicioConjuntos.GetConjuntosUsuario(iUsuarioId);
+            this._prendas = await this.ServicioPrendas.GetPrendasUsuario(iUsuarioId);
         }
         catch (Exception ex)
         {
@@ -118,7 +115,7 @@
 
         try
         {
-            await this.ServicioConjuntos.Delete(iConjuntoId);
+            await this.ServicioPrendas.Delete(iConjuntoId);
             this.ServicioNotificacion.Add("Conjunto eliminado correctamente", Severity.Success);
             await this.CargarConjuntos();
         }

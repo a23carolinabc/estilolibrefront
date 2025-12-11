@@ -9,8 +9,9 @@ namespace EstiloLibreFront.Servicios
     {
         #region ***** PROPIEDADES *****
         private string _urlSaveData = "api/Usuarios/savedata";
+        private string _urlSaveDataNuevoUsuario = "api/Seguridad/savedata";
+        private string _urlAddNew = "api/Seguridad/addnew";
         private string _urlShowData = "api/Usuarios/showdata/";
-        private string _urlAddNew = "api/Usuarios/addnew";
         private string _urlDelete = "api/Usuarios/delete/";
         #endregion
 
@@ -77,6 +78,26 @@ namespace EstiloLibreFront.Servicios
             //Enviar petición al servidor.
             respuestaHttp = await this._factoriaClientesHttp.CreateClient("API")
                 .PostAsJsonAsync(this._urlSaveData, datos);
+
+            //Comprobar status 200.
+            iObjetoId = this.ProcesarRespuestaTexto<int>(respuestaHttp);
+
+            //Devolver respuesta.
+            return iObjetoId;
+        }
+
+        public async Task<int> SaveDataNuevoUsuario(NuevoUsuarioDTO usuario)
+        {
+            JsonElement datos;
+            HttpResponseMessage respuestaHttp;
+            int iObjetoId;
+
+            //Serializar a json.
+            datos = JsonSerializer.SerializeToElement<NuevoUsuarioDTO>(usuario);
+
+            //Enviar petición al servidor.
+            respuestaHttp = await this._factoriaClientesHttp.CreateClient("API")
+                .PostAsJsonAsync(this._urlSaveDataNuevoUsuario, datos);
 
             //Comprobar status 200.
             iObjetoId = this.ProcesarRespuestaTexto<int>(respuestaHttp);

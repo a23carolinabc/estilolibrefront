@@ -1,7 +1,6 @@
 ﻿@layout MainLayout
 @page "/prendas/"
 @page "/prendas/{Id:int}"
-@page "/"
 
 <PageTitle>@Traductor["PageTitle"]</PageTitle>
 
@@ -310,7 +309,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        this.ServicioCargador.Abrir();
+        // this.ServicioCargador.Abrir();
         try
         {
             // Cargar datos necesarios para el formulario.
@@ -342,7 +341,7 @@
         }
         finally
         {
-            this.ServicioCargador.Cerrar();
+            // this.ServicioCargador.Cerrar();
         }
     }
 
