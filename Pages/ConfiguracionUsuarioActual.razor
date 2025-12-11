@@ -1,0 +1,223 @@
+﻿@layout MainLayout
+@page "/configuracion/"
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h2>Configuración de Usuario</h2>
+        </div>
+    </div>
+
+    @if (_usuarioData?.Usuario != null)
+    {
+        <EditForm Model="@this._usuario" OnValidSubmit="this.Guardar">
+            <DataAnnotationsValidator />
+
+            <!-- SELECCIÓN DE LA IMAGEN -->
+            <MudCard Class="mb-4">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">
+                            <MudIcon Icon="@Icons.Material.Filled.Image" Class="mr-2" />
+                            @Traductor["lblFotoPrenda"]
+                        </MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+            </MudCard>
+
+            <!-- INFORMACIÓN BÁSICA -->
+            <MudCard Class="mb-4">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">
+                            <MudIcon Icon="@Icons.Material.Filled.Info" Class="mr-2" />
+                            Información Básica
+                        </MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                        <!-- Login -->
+                        <MudTextField @bind-Value="this._usuario.Login"
+                                      Label="Enlace de Compra (URL)"
+                                      Variant="Variant.Outlined"
+                                      Class="mb-3" />
+                        <!-- Nombre -->
+                        <MudTextField @bind-Value="this._usuario.Nombre"
+                                      Label="Enlace de Compra (URL)"
+                                      Variant="Variant.Outlined"
+                                      Class="mb-3" />
+                        <!-- Apellido 1 -->
+                        <MudTextField @bind-Value="this._usuario.Apellido1"
+                                      Label="Enlace de Compra (URL)"
+                                      Variant="Variant.Outlined"
+                                      Class="mb-3" />
+                        <!-- Apellido 2 -->
+                        <MudTextField @bind-Value="this._usuario.Apellido2"
+                                      Label="Enlace de Compra (URL)"
+                                      Variant="Variant.Outlined"
+                                      Class="mb-3" />
+                        <!-- CorreoE -->
+                        <MudTextField @bind-Value="this._usuario.CorreoE"
+                                      Label="Enlace de Compra (URL)"
+                                      Variant="Variant.Outlined"
+                                      Class="mb-3" />
+                        <!-- Idioma -->
+                        <MudSelect @bind-Value="this._usuario.IdiomaId"
+                                   Label="Color *"
+                                   Variant="Variant.Outlined"
+                                   Class="mb-3"
+                                   Required="true">
+                            <MudSelectItem Value="0">Seleccione un color</MudSelectItem>
+                            @if (this._usuarioData.Idiomas != null)
+                            {
+                                @foreach (var color in this._usuarioData.Idiomas)
+                                {
+                                    <MudSelectItem Value="@color.Id">@color.Nombre</MudSelectItem>
+                                }
+                            }
+                        </MudSelect>
+                        
+                        <!--Público-->
+                        <MudSwitch @bind-Value="@this._usuario.Publico"
+                                   Label="Marcar como favorito"
+                                   Color="Color.Error" />
+
+                        <!-- Telefono -->
+                        <MudNumericField @bind-Value="this._usuario.Telefono"
+                                         Label="Precio (€)"
+                                         Variant="Variant.Outlined"
+                                         Min="0"
+                                         Class="mb-3" />
+
+                        
+
+                        <!-- Fecha nacimiento -->
+                        <MudDatePicker @bind-Date="this._usuario.FechaNacimiento"
+                                       Label="Fecha de Compra"
+                                       Variant="Variant.Outlined" />
+                </MudCardContent>
+            </MudCard>
+
+            <!-- BOTONES DE ACCIÓN -->
+            <MudStack Row="true" Justify="Justify.SpaceBetween" Class="mt-4">
+                    <MudButton Variant="Variant.Outlined"
+                               Color="Color.Default"
+                               StartIcon="@Icons.Material.Filled.ArrowBack"
+                               OnClick="@(() => this.ServicioNavegacion.NavegarA("/"))">
+                        Cancelar
+                    </MudButton>
+
+                    <MudButton ButtonType="ButtonType.Submit"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Save"
+                               Disabled="@(this._bGuardando || string.IsNullOrEmpty(this._strImagenPreview))">
+                        @(this._bGuardando ? "Guardando..." : "Guardar Prenda")
+                    </MudButton>
+                </MudStack>
+
+        </EditForm>
+    }
+</div>
+
+@code {
+    #region ***** INYECCIONES *****
+    [Inject]
+    public required ServicioUsuarios ServicioUsuarios { get; set; }
+    [Inject]
+    public required IStringLocalizer<TrErrores> TraductorErrores { get; set; }
+    [Inject]
+    public required IStringLocalizer<TrErrores> Traductor { get; set; }
+    [Inject]
+    public required IStringLocalizer<TrGeneral> TraductorGeneral { get; set; }
+    [Inject]
+    public required ServicioNavegacion ServicioNavegacion { get; set; }
+    [Inject]
+    public required ServicioDatosContexto ServicioDatosContexto { get; set; }
+    [Inject]
+    public required ISnackbar ServicioNotificacion { get; set; }
+    #endregion
+
+    #region ***** PROPIEDADES PRIVADAS *****
+    private UsuarioData? _usuarioData;
+    private UsuarioDTO _usuario = new();
+    private string _strImagenPreview = string.Empty;
+    private bool _bGuardando = false;
+    #endregion
+
+    #region ***** MÉTODOS PÚBLICOS
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            this._usuarioData = await this.ServicioUsuarios.ShowData(this.ServicioDatosContexto.GetUsuarioId());
+            if (this._usuarioData == null || this._usuarioData.Usuario == null)
+            {
+                this.ServicioNotificacion.Add(this.TraductorErrores["ERR_ObjetoNoEncontrado"], Severity.Error);
+            }
+            else
+            {
+                this._usuario = this._usuarioData.Usuario ?? new();
+                if (!string.IsNullOrEmpty(this._usuario.FotoBase64))
+                {
+                    this._strImagenPreview = this._usuario.FotoBase64;
+                }
+            }
+        }
+        catch
+        {
+            this.ServicioNotificacion.Add(this.TraductorErrores["ERR_CargaDatosIniciales"], Severity.Error);
+        }
+    }
+    #endregion
+
+    #region ***** MÉTODOS PRIVADOS
+
+    private async Task Guardar()
+    {
+        int iPrendaId;
+        bool bFormValido;
+
+        try
+        {
+            //Validar formulario.
+            bFormValido = this.Validar();
+            if (!bFormValido) return;
+
+            //Notificar al usuario.
+            this._bGuardando = true;
+            this.ServicioNotificacion.Add(this.Traductor["NTF_Guardando"], Severity.Info);
+
+            // Enviar al servidor
+            iPrendaId = await this.ServicioUsuarios.SaveData(this._usuario);
+
+            //Notificar al usuario el guardado.
+            this.ServicioNotificacion.Add(this.Traductor["NTF_Guardado"], Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            this.ServicioNotificacion.Add(this.TraductorErrores["ERR_Guardado"], Severity.Error);
+            Console.WriteLine($"Error detallado: {ex}");
+        }
+        finally
+        {
+            this._bGuardando = false;
+        }
+    }
+
+    private bool Validar()
+    {
+        if (string.IsNullOrEmpty(this._usuario.Login) ||
+            string.IsNullOrEmpty(this._usuario.Nombre) ||
+            string.IsNullOrEmpty(this._usuario.Apellido1) ||
+            string.IsNullOrEmpty(this._usuario.CorreoE) ||
+            this._usuario.FechaNacimiento == null ||
+            this._usuario.IdiomaId <= 0)
+        {
+            this.ServicioNotificacion.Add(this.TraductorErrores["ERR_RellenarCamposObligatorios"], Severity.Warning);
+            return false;
+        }
+        return true;
+    }
+    #endregion
+}

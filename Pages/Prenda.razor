@@ -1,9 +1,7 @@
-﻿@using EstiloLibreFront.Objetos.Prendas
-@using EstiloLibreFront.Servicios 
+﻿@layout MainLayout
 @page "/prendas/"
 @page "/prendas/{Id:int}"
 @page "/"
-@layout MainLayout
 
 <PageTitle>@Traductor["PageTitle"]</PageTitle>
 
@@ -13,22 +11,14 @@
         @Traductor["lblCrearNuevaPrenda"]
     </MudText>
 
-    @if (this._bCargandoDatos)
-    {
-        <!-- PANTALLA CARGA INICIAL -->
-        <MudPaper Class="pa-4 text-center">
-            <MudProgressCircular Indeterminate="true" Size="Size.Large" />
-            <MudText Class="mt-2">@Traductor["lblCargandoDatos"]</MudText>
-        </MudPaper>
-    }
-    else if (this._prendaData == null)
+    @if (this._prendaData == null)
     {
         <!-- ERROR AL CARGAR DATOS -->
         <MudAlert Severity="Severity.Error">@TraductorErrores["ERR_CargaDatosIniciales"]</MudAlert>
     }
     else
     {
-        <EditForm Model="@this._prenda" OnValidSubmit="this.GuardarPrenda">
+        <EditForm Model="@this._prenda" OnValidSubmit="this.Guardar">
             <DataAnnotationsValidator />
 
             <!-- SELECCIÓN DE LA IMAGEN -->
@@ -63,12 +53,6 @@
                     }
                     else
                     {
-                        <!-- INPUT SELECCIÓN DE IMAGEN -->
-                        @* <InputFile id="fileInput"
-                                   OnChange="this.CargarImagen"
-                                   accept="image/*"
-                                   class="d-none" /> *@
-
                         <!-- BOTÓN SELECCIÓN DE IMAGEN -->
                         <MudButton HtmlTag="label"
                                    Variant="Variant.Filled"
@@ -301,6 +285,10 @@
     public required IStringLocalizer<TrErrores> TraductorErrores { get; set; }
     [Inject]
     public required IStringLocalizer<TrPrendas> Traductor { get; set; }
+    [Inject]
+    public required IStringLocalizer<TrGeneral> TraductorGeneral { get; set; }
+    [Inject]
+    public required IServicioCargador ServicioCargador { get; set; }
     #endregion
 
     #region ***** PARAMETROS *****
@@ -313,7 +301,6 @@
     private PrendaData? _prendaData = null;
     private PrendaDTO _prenda = new();
     private string _strImagenPreview = string.Empty;
-    private bool _bCargandoDatos = true;
     private bool _bProcesandoImagen = false;
     private bool _bGuardando = false;
 
@@ -323,11 +310,9 @@
 
     protected override async Task OnInitializedAsync()
     {
+        this.ServicioCargador.Abrir();
         try
         {
-            // Notificamos la carga de datos.
-            this._bCargandoDatos = true;
-
             // Cargar datos necesarios para el formulario.
             if(this.Id > 0)
             {
@@ -336,7 +321,7 @@
             {                
                 this._prendaData = await this.ServicioPrendas.AddNew();
             }
-            
+
             //Iniciamos objeto prenda.
             if (this._prendaData == null)
             {
@@ -353,13 +338,11 @@
         }
         catch (Exception ex)
         {
-            this._prendaData = null;
             this.ServicioNotificacion.Add(this.TraductorErrores["ERR_CargaDatosIniciales"], Severity.Error);
-            Console.WriteLine($"Error completo: {ex}");            
         }
         finally
         {
-            this._bCargandoDatos = false;
+            this.ServicioCargador.Cerrar();
         }
     }
 
@@ -430,12 +413,11 @@
             else
             {
                 this.ServicioNotificacion.Add(this.TraductorErrores["ERR_FondoNoEliminado"], Severity.Error);
-                throw new Exception(this.TraductorErrores["ERR_FondoNoEliminado"]);
+                throw new Exception();
             }
         }
         catch (Exception ex)
         {
-            this.ServicioNotificacion.Add(this.TraductorErrores["ERR_EliminarFondo"], Severity.Error);
             Console.WriteLine($"Error detallado: {ex}");
 
             // Limpiar preview.
@@ -449,7 +431,7 @@
         }
     }
 
-    private async Task GuardarPrenda()
+    private async Task Guardar()
     {
         int iPrendaId;
         bool bFormValido;
@@ -462,13 +444,13 @@
 
             //Notificar al usuario.
             this._bGuardando = true;
-            this.ServicioNotificacion.Add(this.Traductor["NTF_GuardandoPrenda"], Severity.Info);
+            this.ServicioNotificacion.Add(this.TraductorGeneral["NTF_Guardando"], Severity.Info);
 
             // Enviar al servidor
             iPrendaId = await this.ServicioPrendas.SaveData(this._prenda);
 
             //Notificar al usuario el guardado.
-            this.ServicioNotificacion.Add(this.Traductor["NTF_PrendaGuardada"], Severity.Success);            
+            this.ServicioNotificacion.Add(this.TraductorGeneral["NTF_Guardado"], Severity.Success);
         }
         catch (Exception ex)
         {

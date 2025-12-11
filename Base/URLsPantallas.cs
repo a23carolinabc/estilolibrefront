@@ -7,5 +7,6 @@
         public const string Prendas = "prendas/";    
         public const string Conjuntos = "conjuntos/";    
         public const string ListadoConjuntos = "listadoConjuntos/";    
+        public const string Configuracion = "configuracion/";    
     }
 }

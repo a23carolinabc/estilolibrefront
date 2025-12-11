@@ -8,10 +8,10 @@ namespace EstiloLibreFront.Servicios
     public class ServicioUsuarios : ServicioBase
     {
         #region ***** PROPIEDADES *****
-        private string _urlSaveData = "Usuarios/savedata";
-        private string _urlShowData = "Usuarios/showdata/";
-        private string _urlAddNew = "Usuarios/addnew";
-        private string _urlDelete = "Usuarios/delete/";
+        private string _urlSaveData = "api/Usuarios/savedata";
+        private string _urlShowData = "api/Usuarios/showdata/";
+        private string _urlAddNew = "api/Usuarios/addnew";
+        private string _urlDelete = "api/Usuarios/delete/";
         #endregion
 
         #region ***** CONSTRUCTORES *****
@@ -35,7 +35,7 @@ namespace EstiloLibreFront.Servicios
 
             //Enviar petición al servidor.
             respuestaHttp = await this._factoriaClientesHttp.CreateClient("API")
-                    .GetAsync(_urlAddNew);
+                    .GetAsync(this._urlAddNew);
 
             //Comprobar status 200.
             strDatos = this.ProcesarRespuestaTexto<string>(respuestaHttp);
@@ -55,7 +55,7 @@ namespace EstiloLibreFront.Servicios
 
             //Enviar petición al servidor.
             respuestaHttp = await this._factoriaClientesHttp.CreateClient("API")
-                    .GetAsync(_urlShowData + iUsuarioId);
+                    .GetAsync(this._urlShowData + iUsuarioId);
 
             //Comprobar status 200.
             strDatos = this.ProcesarRespuestaTexto<string>(respuestaHttp);
@@ -65,18 +65,18 @@ namespace EstiloLibreFront.Servicios
             return usuarioDataDB;
         }
 
-        public async Task<int> SaveData(UsuarioSaveDataDTO usuario)
+        public async Task<int> SaveData(UsuarioDTO usuario)
         {
             JsonElement datos;
             HttpResponseMessage respuestaHttp;
             int iObjetoId;
 
             //Serializar a json.
-            datos = JsonSerializer.SerializeToElement<UsuarioSaveDataDTO>(usuario);
+            datos = JsonSerializer.SerializeToElement<UsuarioDTO>(usuario);
 
             //Enviar petición al servidor.
             respuestaHttp = await this._factoriaClientesHttp.CreateClient("API")
-                .PostAsJsonAsync(_urlSaveData, datos);
+                .PostAsJsonAsync(this._urlSaveData, datos);
 
             //Comprobar status 200.
             iObjetoId = this.ProcesarRespuestaTexto<int>(respuestaHttp);
@@ -92,7 +92,7 @@ namespace EstiloLibreFront.Servicios
 
             //Enviar petición al servidor.
             respuestaHttp = await this._factoriaClientesHttp.CreateClient("API")
-                    .DeleteAsync(_urlDelete + idUsuario);
+                    .DeleteAsync(this._urlDelete + idUsuario);
 
             //Comprobar status 200.
             strRespuesta = this.ProcesarRespuestaTexto<string>(respuestaHttp);
