@@ -2,10 +2,9 @@
 {
     public class CodigosPermisos
     {
-        //Permisos de consulta
-        public const string LEC_Usuarios = "LEC_Usuarios";
-
-        //Permisos de modificación de objeto
-        public const string MOD_Usuarios = "MOD_Usuarios";
+        // Permisos del sistema
+        public const string USER = "USER";
+        public const string ADMIN = "ADMIN";
+        public const string PLUS = "ADMINPLUS";
     }
 }

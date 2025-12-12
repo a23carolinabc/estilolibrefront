@@ -13,6 +13,15 @@
         public const string Conjuntos = "conjuntos/";    
         public const string ListadoPrendas = "listadoPrendas/";    
         public const string ListadoConjuntos = "listadoConjuntos/";    
-        public const string Configuracion = "configuracion/";    
+        public const string Configuracion = "configuracion/";
+
+        // Rutas de administración - Usuarios Admin (requiere permiso PLUS)
+        public const string AdminMenu = "admin/menu/";
+        public const string AdminUsuarios = "admin/usuarios/";
+        public const string AdminUsuariosListado = "admin/usuarios/listado/";
+
+        // Rutas de administración - Usuarios Normales (requiere permiso ADMIN)
+        public const string AdminUsuariosNormales = "admin/usuarios-normales/";
+        public const string AdminUsuariosNormalesListado = "admin/usuarios-normales/listado/";
     }
 }

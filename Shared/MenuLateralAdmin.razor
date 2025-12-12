@@ -1,0 +1,75 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+
+<MudDrawer Open="true" Elevation="0" Variant="@DrawerVariant.Persistent"
+           ClipMode="DrawerClipMode.Never">
+    <MudPaper Width="100%" Height="100%" Class="d-inline-flex py-3" Elevation="0" Outlined=true>
+        <MudNavMenu Class="mud-width-full">
+            <MudText Typo="Typo.h6" Class="px-4">EstiloLibre</MudText>
+            <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">Administración</MudText>
+            <MudDivider Class="my-2" />
+
+            <!-- Menú Principal -->
+            <MudNavLink Href=@(URLsPantallas.AdminMenu)
+                        Icon="@Icons.Material.Filled.Dashboard">
+                Panel Admin
+            </MudNavLink>
+
+            <AuthorizeView Policy="@CodigosPermisos.ADMIN">
+                <Authorized>
+                    <!-- Gestión de Usuarios Normales (ADMIN) -->
+                    <MudNavGroup Title="Usuarios Normales"
+                                 Icon="@Icons.Material.Filled.People"
+                                 Expanded="false">
+                        <MudNavLink Href=@(URLsPantallas.AdminUsuariosNormalesListado)
+                                    Icon="@Icons.Material.Filled.List">
+                            Listado Usuarios
+                        </MudNavLink>
+                    </MudNavGroup>
+                </Authorized>
+            </AuthorizeView>
+
+            <AuthorizeView Policy="@CodigosPermisos.PLUS">
+                <Authorized>
+                    <!-- Gestión de Usuarios Admin (PLUS) -->
+                    <MudNavGroup Title="Administradores"
+                                 Icon="@Icons.Material.Filled.AdminPanelSettings"
+                                 Expanded="false">
+                        <MudNavLink Href=@(URLsPantallas.AdminUsuariosListado)
+                                    Icon="@Icons.Material.Filled.List">
+                            Listado Admins
+                        </MudNavLink>
+                        <MudNavLink Href=@(URLsPantallas.AdminUsuarios)
+                                    Icon="@Icons.Material.Filled.PersonAdd">
+                            Crear Admin
+                        </MudNavLink>
+                    </MudNavGroup>
+                </Authorized>
+            </AuthorizeView>
+
+            <MudDivider Class="my-2" />
+
+            <!-- Volver al área de usuario -->
+            <MudNavLink Href=@(URLsPantallas.Menu)
+                        Icon="@Icons.Material.Filled.ExitToApp">
+                Ir a Mi Cuenta
+            </MudNavLink>
+        </MudNavMenu>
+    </MudPaper>
+</MudDrawer>
+
+@code {
+    #region ***** DEPENDENCIAS *****
+    #endregion
+
+    #region ***** PARÁMETROS *****
+    #endregion
+
+    #region ***** PROPIEDADES PRIVADAS *****
+    #endregion
+
+    #region ***** MÉTODOS PÚBLICOS *****
+    #endregion
+
+    #region ***** MÉTODOS PRIVADOS *****
+    #endregion
+}

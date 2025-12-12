@@ -8,9 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\css\Layout\LayoutAdministracion.css" />
     <Content Remove="wwwroot\css\Pages\Conocenos.css" />
     <Content Remove="wwwroot\css\Pages\Inicio.css" />
     <Content Remove="wwwroot\css\Shared\MenuSuperior.css" />
+    <Content Remove="wwwroot\css\Shared\MenuSuperiorAdmin.css" />
     <Content Remove="wwwroot\css\Shared\MenuSuperiorPublico.css" />
   </ItemGroup>
 
@@ -20,12 +22,14 @@
 
   <ItemGroup>
     <None Include="Pages\Login.razor" />
+    <None Include="wwwroot\css\Layout\LayoutAdministracion.css" />
     <None Include="wwwroot\css\Layout\LayoutPublico.css" />
     <None Include="wwwroot\css\Layout\MainLayout.css" />
     <None Include="wwwroot\css\Pages\Conocenos.css" />
     <None Include="wwwroot\css\Pages\Inicio.css" />
     <None Include="wwwroot\css\Shared\Cargador.css" />
     <None Include="wwwroot\css\Shared\ConjuntoCanvas.css" />
+    <None Include="wwwroot\css\Shared\MenuSuperiorAdmin.css" />
     <None Include="wwwroot\css\Shared\MenuSuperior.css" />
     <None Include="wwwroot\css\Shared\MenuSuperiorPublico.css" />
     <None Include="wwwroot\css\Shared\PiePagina.css" />
